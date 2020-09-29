@@ -1,0 +1,30 @@
+{
+  "name": "cordova-plugin-freestar",
+  "version": "1.0.0",
+  "description": "Freestar Ads Mediation Plugin for Cordova",
+  "cordova": {
+    "id": "cordova-plugin-freestar",
+    "platforms": [
+      "android"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/freestarcapital/freestar-plugin-cordova.git"
+  },
+  "keywords": [
+    "freestar",
+    "mediation",
+    "ads",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "author": "freestar",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/freestarcapital/freestar-plugin-cordova/issues"
+  },
+  "homepage": "https://github.com/freestarcapital/freestar-plugin-cordova#readme",
+
+
+}

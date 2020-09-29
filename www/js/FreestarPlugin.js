@@ -16,7 +16,7 @@ function setAdRequestUserParams(age, birthDate, gender, maritalStatus,
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SET_USER_PARAMS,
@@ -43,7 +43,7 @@ function setAdRequestAppParams(appName, pubName, appDomain, pubDomain, storeUrl,
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SET_APP_PARAMS,
@@ -68,7 +68,7 @@ function initializeFreestarSDK(apikey) {
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_INIT,
@@ -85,7 +85,7 @@ function setTestModeEnabled(isEnabled, hashID) {
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SET_TESTMODE_PARAMS,
@@ -114,7 +114,7 @@ function loadInterstitialAdFromSDK(placement) {
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_LOAD_INTERSTITIAL_AD,
@@ -130,7 +130,7 @@ function showInterstitialAdFromSDK(placement) {
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SHOW_INTERSTITIAL_AD,
@@ -197,7 +197,7 @@ function showPrerollAdFromSDK(width, height, adDiv, videoElement) {
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SHOW_PREROLL_AD,
@@ -288,7 +288,7 @@ function prerollAdEventFromJSPlayer(partner, event) {
             log("Success");
         },
         function(result) {
-            log("Failed");
+            log("Fail");
         },
         "FreestarPlugin",
         ACTION_PREROLL_AD_EVENT,
@@ -338,10 +338,10 @@ function loadRewardAdFromSDK(placement) {
 
     cordova.exec(
         function(result) {
-            log("Success");
+            log("Success")
         },
         function(result) {
-            log("Success");
+            log("Fail");
         },
         "FreestarPlugin",
         ACTION_LOAD_REWARD_AD,
@@ -359,7 +359,7 @@ function showRewardAdFromSDK(placement, secret, userid, rewardName, rewardAmount
             log("Success");
         },
         function(result) {
-            log("Success");
+            log("Fail")
         },
         "FreestarPlugin",
         ACTION_SHOW_REWARD_AD,

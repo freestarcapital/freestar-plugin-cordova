@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="cordova-plugin-freestar" version="0.2.3" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+    <name>FreestarPlugin</name>
+    <description>Freestar Ads Mediation Plugin for Cordova</description>
+    <license>Apache 2.0</license>
+    <keywords>freestar, mediation, ads</keywords>
+    <js-module name="FreestarPlugin" src="www/js/FreestarPlugin.js">
+        <clobbers target="FreestarPlugin" />
+    </js-module>
+    <platform name="android">
+        <config-file parent="/*" target="config.xml">
+            <feature name="FreestarPlugin">
+                <param name="android-package" value="com.freestar.android.cordova.FreestarPlugin" />
+            </feature>
+        </config-file>
+    </platform>
+</plugin>

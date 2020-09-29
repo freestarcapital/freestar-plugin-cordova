@@ -71,6 +71,7 @@ public class FreestarPlugin extends CordovaPlugin {
     }
 
     public boolean execute(String action, final JSONArray inputs, CallbackContext callbackContext) throws JSONException {
+
         ChocolateLogger.i(TAG, "FreestarPlugin Action Received :" + action);
 
         if (ACTION_LOAD_INTERSTITIAL_AD.equals(action)) {
@@ -216,7 +217,7 @@ public class FreestarPlugin extends CordovaPlugin {
                 return false;
             }
 
-            final boolean isEnabled = options.has("TESTMODE") && options.optBoolean("TESTMODE");
+            final boolean isEnabled = options.optBoolean("TESTMODE", false);
             final String hashID = valueFromOptions("HASHID", options);
 
             setTestModeEnabled(isEnabled, hashID);
