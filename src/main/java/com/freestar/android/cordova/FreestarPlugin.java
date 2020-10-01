@@ -1,6 +1,9 @@
 package com.freestar.android.cordova;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
@@ -36,6 +39,8 @@ public class FreestarPlugin extends CordovaPlugin {
 
     private static final String TAG = "FreestarCordovaPlugin";
 
+    private static final boolean IS_DEBUG = true; //TODO remove
+
     private AdRequest adRequest;
 
     private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
@@ -59,7 +64,21 @@ public class FreestarPlugin extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
+        if (IS_DEBUG) {
+            FreeStarAds.enableTestAds(true);
+            FreeStarAds.enableLogging(true);
+        }
         ChocolateLogger.i(TAG, "Init FreestarPlugin");
+        try {
+            Context context = webView.getContext();
+            ApplicationInfo app = context.getPackageManager().getApplicationInfo(webView.getContext().getPackageName(), PackageManager.GET_META_DATA);
+            String apiKey = app.metaData.getString("com.freestar.android.ads.API_KEY");
+            FreeStarAds.init(context, apiKey);
+        }catch (Exception e) {
+            //this will be bad since Freestar won't be able to initialize
+            ChocolateLogger.e(TAG,"init failed", e);
+        }
+
     }
 
     private String valueFromOptions(String key, JSONObject options) {
@@ -221,19 +240,6 @@ public class FreestarPlugin extends CordovaPlugin {
             final String hashID = valueFromOptions("HASHID", options);
 
             setTestModeEnabled(isEnabled, hashID);
-        } else if (ACTION_INIT.equals(action)) {
-            JSONObject options = inputs.optJSONObject(0);
-            if (options == null) {
-                return false;
-            }
-
-            final String key = valueFromOptions("apikey", options);
-
-            cordova.getActivity().runOnUiThread(new Runnable() {
-                public void run() {
-                    FreeStarAds.init(cordova.getActivity(), key, new AdRequest(cordova.getActivity()));
-                }
-            });
         }
 
         return true;
