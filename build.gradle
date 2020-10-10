@@ -27,7 +27,7 @@ ext {
     libraryDescription = 'Freestar Mediation Platform - Cordova plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/freestar-plugin-cordova.git'
-    libraryVersion = '1.0.9'  //CHANGE
+    libraryVersion = '1.1.0'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'Freestar developer'
     developerEmail = 'support@freestar.io'
