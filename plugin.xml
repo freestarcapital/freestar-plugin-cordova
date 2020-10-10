@@ -11,6 +11,7 @@
         <config-file parent="/*" target="config.xml">
             <feature name="FreestarPlugin">
                 <param name="android-package" value="com.freestar.android.cordova.FreestarPlugin" />
+                <param name="onload" value="true" />
             </feature>
         </config-file>
     </platform>

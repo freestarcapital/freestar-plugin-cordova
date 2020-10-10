@@ -99,7 +99,6 @@ var ACTION_SHOW_REWARD_AD = "SHOW_REWARD_AD";
 var ACTION_CHECK_REWARD_AD = "CHECK_REWARD_AD";
 
 var ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
-var ACTION_SET_APP_PARAMS = "SET_APP_PARAMS";
 var ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
 
 function loadRewardAdFromSDK(placement) {
@@ -140,21 +139,55 @@ function showRewardAdFromSDK(placement, secret, userid, rewardName, rewardAmount
     );
 }
 
-function checkRewardAdStatusFromSDK(placement) {
-    log("checkRewardAdStatusFromSDK");
+//banner ads
+const ACTION_SHOW_BANNER_AD = "SHOW_BANNER_AD";
+const ACTION_CLOSE_BANNER_AD = "CLOSE_BANNER_AD";
+
+//supported banner ad sizes
+const BANNER_AD_SIZE_320x50 = 0;
+const BANNER_AD_SIZE_300x250 = 1;
+
+//supported banner ad positions
+const BANNER_AD_POSITION_BOTTOM = 0;
+const BANNER_AD_POSITION_MIDDLE = 1;
+const BANNER_AD_POSITION_TOP = 2;
+
+function showBannerAdFromSDK(placement, bannerAdSize, bannerAdPosition) {
+    log("showBannerAd");
 
     cordova.exec(
         function(result) {
-            log("checkRewardAdStatus Success");
-            //REWARD_AD_LOADED = true;
+            log("Success");
         },
         function(result) {
-            log("checkRewardAdStatus Failed");
-            //REWARD_AD_LOADED = false;
+            log("Fail")
         },
         "FreestarPlugin",
-        ACTION_CHECK_REWARD_AD,
-        [{"placement":placement}]
+        ACTION_SHOW_BANNER_AD,
+        [{
+            "placement":placement,
+         	"banner_ad_size":bannerAdSize,
+         	"banner_ad_position":bannerAdPosition
+         }]
+    );
+}
+
+function closeBannerAdFromSDK(placement, bannerAdSize) {
+    log("closeBannerAd");
+
+    cordova.exec(
+        function(result) {
+            log("Success");
+        },
+        function(result) {
+            log("Fail")
+        },
+        "FreestarPlugin",
+        ACTION_CLOSE_BANNER_AD,
+        [{
+            "placement":placement,
+         	"banner_ad_size":bannerAdSize
+         }]
     );
 }
 
@@ -178,4 +211,17 @@ FreestarAds.showRewardedAd = function(placement) {
 FreestarAds.showInterstitialAd = function(placement) {
    console.log("FreestarPlugin.js: show interstitial.  placement: " + placement);
 	showInterstitialAdFromSDK(placement);
+}
+
+FreestarAds.showBannerAd = function(placement, bannerAdSize, bannerAdPosition) {
+   console.log("FreestarPlugin.js: show banner ad.  placement: " + placement
+               + " adSize: " + bannerAdSize
+               + " adPosition: " + bannerAdPosition);
+	showBannerAdFromSDK(placement, bannerAdSize, bannerAdPosition);
+}
+
+FreestarAds.closeBannerAd = function(placement, bannerAdSize) {
+   console.log("FreestarPlugin.js: close banner ad.  placement: " + placement
+               + " adSize: " + bannerAdSize);
+	closeBannerAdFromSDK(placement, bannerAdSize);
 }

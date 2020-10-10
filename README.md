@@ -3,4 +3,4 @@
 
 Plugin publish process:
     - update version in package.json
-    - npm publish [path]\freestar-plugin-cordova
+    - npm publish [full path]\freestar-plugin-cordova

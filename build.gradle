@@ -90,7 +90,7 @@ repositories {
 
 dependencies {
 
-    compileOnly 'com.freestar.android.ads:freestar:3.2.8'
+    compileOnly 'com.freestar.android.ads:freestar-beta:3.2.9-beta02'
 
     compileOnly 'org.apache.cordova:framework:7.0.0'
 }
