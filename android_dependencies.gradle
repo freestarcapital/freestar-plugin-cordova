@@ -1,0 +1,51 @@
+allprojects {
+    repositories {
+        mavenCentral()
+        jcenter()
+        maven { url 'https://jitpack.io' }
+        maven { url "https://dl.bintray.com/vdopiacorp/fsdk" }
+        maven { url 'https://tapjoy.bintray.com/maven' }
+        maven { url "https://s3.amazonaws.com/moat-sdk-builds" }
+        google()
+    }
+}
+dependencies {
+    //begin Freestar
+    implementation 'com.freestar.android.ads:freestar-beta:3.2.9-beta02'
+    implementation 'com.freestar.android.ads.admob:freestar-admob-adapter:17.2.0.4'
+    implementation 'com.freestar.android.ads.applovin:freestar-applovin-adapter:9.13.1.2'
+    implementation 'com.freestar.android.ads.amazon:freestar-amazon-adapter:5.9.0.3'
+    implementation 'com.freestar.android.ads.adcolony:freestar-adcolony-adapter:4.1.4.2' //Fullscreen ads only
+    implementation 'com.freestar.android.ads.google:freestar-google-adapter:17.2.0.5'
+    implementation 'com.freestar.android.ads.criteo:freestar-criteo-adapter:3.4.0.3'
+    implementation 'com.freestar.android.ads.unityads:freestar-unity-adapter:3.4.2.3'
+    implementation 'com.freestar.android.ads.vungle:freestar-vungle-adapter:6.7.0'  //Fullscreen ads only
+    implementation 'com.freestar.android.ads.facebook:freestar-facebook-adapter:5.8.0.4'
+    implementation 'com.freestar.android.ads.tapjoy:freestar-tapjoy-adapter:12.2.1'  //Fullscreen ads only
+    implementation 'com.freestar.android.ads.mopub:freestar-mopub-adapter:5.8.0.3'
+
+    implementation 'com.applovin:applovin-sdk:9.13.1'
+    implementation 'com.google.android.gms:play-services-ads:17.2.1' //11.0.4 minimum is required, 16.0.0 or newer recommended!
+    implementation('com.google.android.ads.consent:consent-library:1.0.7') {
+        exclude group: 'com.android.support'
+        exclude group: 'com.google.code.gson', module: 'gson'
+    }
+    implementation('com.facebook.android:audience-network-sdk:5.9.0') {
+        exclude group: 'com.google.android.exoplayer'
+        exclude group: 'com.google.android.gms'
+        exclude group: 'com.android.support'
+    }
+    implementation 'com.tapjoy:tapjoy-android-sdk:12.4.2@aar'
+    implementation('com.github.vungle:vungle-android-sdk:6.7.0') {
+        exclude group: 'com.android.support'
+    }
+    implementation('com.mopub:mopub-sdk:5.12.0@aar') {
+        transitive = true
+        exclude group: 'com.android.support'
+    }
+
+    implementation 'com.freestar.android.cordova:cordova-plugin-beta:1.+'
+    //Note: if you are using Pre-roll, un-comment the following line:
+    //implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.11.2'
+    //end, FreeStar
+}

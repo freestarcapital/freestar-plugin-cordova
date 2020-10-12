@@ -2,19 +2,22 @@ package com.freestar.android.cordova;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
 
 import com.freestar.android.ads.AdRequest;
+import com.freestar.android.ads.AdSize;
+import com.freestar.android.ads.BannerAdListener;
 import com.freestar.android.ads.ChocolateLogger;
 import com.freestar.android.ads.ErrorCodes;
 import com.freestar.android.ads.FreeStarAds;
 import com.freestar.android.ads.InterstitialAd;
 import com.freestar.android.ads.InterstitialAdListener;
-import com.freestar.android.ads.LVDOAdUtil;
 import com.freestar.android.ads.RewardedAd;
 import com.freestar.android.ads.RewardedAdListener;
 
@@ -41,29 +44,30 @@ public class FreestarPlugin extends CordovaPlugin {
 
     private static final boolean IS_DEBUG = true; //TODO remove
 
-    private AdRequest adRequest;
-
-    private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
-    private Map<String, RewardedAd> rewardedAdMap = new HashMap<>();
-    private long lastRequestMillis;
-
+    private static final String API_META_KEY = "com.freestar.android.ads.API_KEY";
     private static final String PLACEMENT = "placement";
-
-    private static final String ACTION_INIT = "FREESTAR_INIT";
+    private static final String BANNER_AD_SIZE = "banner_ad_size";
+    private static final String BANNER_AD_POSITION = "banner_ad_position";
 
     private static final String ACTION_LOAD_INTERSTITIAL_AD = "LOAD_INTERSTITIAL_AD";
     private static final String ACTION_SHOW_INTERSTITIAL_AD = "SHOW_INTERSTITIAL_AD";
 
     private static final String ACTION_LOAD_REWARD_AD = "LOAD_REWARD_AD";
     private static final String ACTION_SHOW_REWARD_AD = "SHOW_REWARD_AD";
-    private static final String ACTION_CHECK_REWARD_AD = "CHECK_REWARD_AD";
-
+    private static final String ACTION_SHOW_BANNER_AD = "SHOW_BANNER_AD";
+    private static final String ACTION_CLOSE_BANNER_AD = "CLOSE_BANNER_AD";
     private static final String ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
-    private static final String ACTION_SET_APP_PARAMS = "SET_APP_PARAMS";
     private static final String ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
+
+    private AdRequest adRequest;
+    private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
+    private Map<String, RewardedAd> rewardedAdMap = new HashMap<>();
+    private Map<String, PopupBannerAd> popupBannerAdMap = new HashMap<>();
+    private long lastFullscreenMillis;
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
+        adRequest = new AdRequest(cordova.getActivity());        
         if (IS_DEBUG) {
             FreeStarAds.enableTestAds(true);
             FreeStarAds.enableLogging(true);
@@ -72,62 +76,204 @@ public class FreestarPlugin extends CordovaPlugin {
         try {
             Context context = webView.getContext();
             ApplicationInfo app = context.getPackageManager().getApplicationInfo(webView.getContext().getPackageName(), PackageManager.GET_META_DATA);
-            String apiKey = app.metaData.getString("com.freestar.android.ads.API_KEY");
+            String apiKey = app.metaData.getString(API_META_KEY);
             FreeStarAds.init(context, apiKey);
-        }catch (Exception e) {
+        } catch (Exception e) {
             //this will be bad since Freestar won't be able to initialize
-            ChocolateLogger.e(TAG,"init failed", e);
+            ChocolateLogger.e(TAG, "init failed", e);
         }
-
     }
 
-    private String valueFromOptions(String key, JSONObject options) {
-        String value = "";
+    private String stringFrom(JSONObject options, String key, String defaultString) {
+        String value = defaultString;
         if (options != null && options.has(key)) {
-            value = options.optString(key);
+            value = options.optString(key, defaultString);
         }
         return value;
+    }
+
+    private int intFrom(JSONObject options, String key, int defaultInt) {
+        int intValue = defaultInt;
+        if (options != null && options.has(key)) {
+            intValue = options.optInt(key, defaultInt);
+        }
+        return intValue;
+    }
+
+    private void loadInterstitialAd(String placement) {
+        InterstitialAd interstitialAd = new InterstitialAd(cordova.getActivity(), interstitialAdListener);
+        interstitialAdMap.put(placement, interstitialAd);
+        interstitialAd.loadAd(adRequest, placement);
+        interstitialAd.loadAd(adRequest);
+    }
+
+    private void loadRewardedAd(String placement) {
+        RewardedAd rewardedAd = new RewardedAd(cordova.getActivity(), rewardedAdListener);
+        rewardedAdMap.put(placement, rewardedAd);
+        rewardedAd.loadAd(adRequest, placement);
+    }
+
+    private void loadBannerAd(final String placement, final int bannerAdSize, final int bannerAdPosition) {
+        PopupBannerAd popupBannerAd = popupBannerAdMap.get(placement + "" + bannerAdSize);
+        if (popupBannerAd != null && popupBannerAd.isShowing()) {
+            ChocolateLogger.w(TAG, "show banner. already showing. placement: "
+                    + placement + " bannerAdSize: " + bannerAdSize);
+        } else {
+            popupBannerAd = new PopupBannerAd(cordova.getActivity());
+            final PopupBannerAd finalPopupBannerAd = popupBannerAd;
+            popupBannerAdMap.put(placement + "" + bannerAdSize, popupBannerAd);
+            popupBannerAd.loadBannerAd(adRequest,
+                    from(bannerAdSize),
+                    placement,
+                    bannerAdPosition,
+                    new BannerAdListener() {
+                        @Override
+                        public void onBannerAdLoaded(View bannerAdView, String placement) {
+                            try {
+                                finalPopupBannerAd.showBannerAd(bannerAdView);
+                                sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onBannerAdShowing'," +
+                                        callbackParamsFrom(placement, bannerAdSize, -1) +
+                                        ");");
+                            } catch (Throwable t) {
+                                ChocolateLogger.e(TAG, "loadBannerAd failed", t);
+                            }
+                        }
+
+                        @Override
+                        public void onBannerAdFailed(View bannerAdView, String placement, int errorCode) {
+                            sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onBannerAdFailed'," +
+                                    callbackParamsFrom(placement, bannerAdSize, errorCode) +
+                                    ");");
+                        }
+
+                        @Override
+                        public void onBannerAdClicked(View bannerAdView, String placement) {
+                            sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onBannerAdClicked'," +
+                                    callbackParamsFrom(placement, bannerAdSize, -1) +
+                                    ");");
+                        }
+
+                        @Override
+                        public void onBannerAdClosed(View bannerAdView, String placement) {
+                            //not implemented
+                        }
+                    });
+        }
+    }
+
+    private AdSize from(int bannerAdSize) {
+        if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50) {
+            return AdSize.BANNER_320_50;
+        } else {
+            return AdSize.MEDIUM_RECTANGLE_300_250;
+        }
+    }
+
+    @Override
+    public void onResume(boolean multitasking) {
+        super.onResume(multitasking);
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                for (PopupBannerAd popupBannerAd : popupBannerAdMap.values()) {
+                    popupBannerAd.onResume();
+                }
+            }
+        });
+    }
+
+    @Override
+    public void onPause(boolean multitasking) {
+        super.onPause(multitasking);
+        cordova.getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                for (PopupBannerAd popupBannerAd : popupBannerAdMap.values()) {
+                    popupBannerAd.onPause();
+                }
+            }
+        });
     }
 
     public boolean execute(String action, final JSONArray inputs, CallbackContext callbackContext) throws JSONException {
 
         ChocolateLogger.i(TAG, "FreestarPlugin Action Received :" + action);
 
-        if (ACTION_LOAD_INTERSTITIAL_AD.equals(action)) {
+        if (ACTION_SHOW_BANNER_AD.equals(action)) {
+
+            JSONObject options = inputs.optJSONObject(0);
+            final String placement = stringFrom(options, PLACEMENT, "");
+            final int bannerAdSize = intFrom(options, BANNER_AD_SIZE, FreestarConstants.BANNER_AD_SIZE_320x50);
+            final int bannerAdPosition = intFrom(options, BANNER_AD_POSITION, FreestarConstants.BANNER_AD_POSITION_BOTTOM);
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    if (IS_DEBUG) {
+                        MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_BANNER, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                loadBannerAd(placement, bannerAdSize, bannerAdPosition);
+                            }
+                        });
+                    } else {
+                        loadBannerAd(placement, bannerAdSize, bannerAdPosition);
+                    }
+                }
+            });
+
+        } else if (ACTION_CLOSE_BANNER_AD.equals(action)) {
+            JSONObject options = inputs.optJSONObject(0);
+            final String placement = stringFrom(options, PLACEMENT, "");
+            final int bannerAdSize = intFrom(options, BANNER_AD_SIZE, FreestarConstants.BANNER_AD_SIZE_320x50);
+            cordova.getActivity().runOnUiThread(new Runnable() {
+                public void run() {
+                    PopupBannerAd popupBannerAd = popupBannerAdMap.get(placement + "" + bannerAdSize);
+                    if (popupBannerAd != null && popupBannerAd.isShowing()) {
+                        popupBannerAd.destroy();
+                    }
+                }
+            });
+        } else if (ACTION_LOAD_INTERSTITIAL_AD.equals(action)) {
 
             synchronized (this) {
-                if (!canRequest()) {
+                if (!canFullscreenRequest()) {
                     Log.e(TAG, "Cannot LOAD_INTERSTITIAL_AD while another ad is in progress ");
                     return false;
                 }
-                markRequest();
+                markFullscreenRequest();
             }
 
-            JSONObject options = inputs.optJSONObject(0);
-
-            final String placement = valueFromOptions(PLACEMENT, options);
-
             cordova.getActivity().runOnUiThread(new Runnable() {
+                JSONObject options = inputs.optJSONObject(0);
+                final String placement = stringFrom(options, PLACEMENT, "");
+
                 public void run() {
-                    InterstitialAd interstitialAd = new InterstitialAd(cordova.getActivity(), interstitialAdListener);
-                    interstitialAdMap.put(placement, interstitialAd);
-                    interstitialAd.loadAd(getAdRequest(), placement);
+                    if (IS_DEBUG) {
+                        MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_INTERSTITIAL, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                loadInterstitialAd(placement);
+                            }
+                        });
+                    } else {
+                        loadInterstitialAd(placement);
+                    }
                 }
             });
 
         } else if (ACTION_SHOW_INTERSTITIAL_AD.equals(action)) {
-
+            JSONObject options = inputs.optJSONObject(0);
+            final String placement = stringFrom(options, PLACEMENT, "");
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    JSONObject options = inputs.optJSONObject(0);
-                    final String placement = valueFromOptions(PLACEMENT, options);
-                    InterstitialAd interstitialAd = interstitialAdMap.get(placement+"");
+                    InterstitialAd interstitialAd = interstitialAdMap.get(placement + "");
                     if (interstitialAd != null) {
                         try {
                             interstitialAd.show();
-                        }catch(Exception e) {
-                            ChocolateLogger.e(TAG,"", e);
+                        } catch (Exception e) {
+                            interstitialAdListener.onInterstitialFailed(placement, ErrorCodes.INTERNAL_ERROR);
+                            ChocolateLogger.e(TAG, "interstitial failed. internal error.", e);
                         }
+                    } else {
+                        interstitialAdListener.onInterstitialFailed(placement, ErrorCodes.INVALID_REQUEST);
+                        ChocolateLogger.e(TAG, "show interstitial failed.  interstitial ad is null.");
                     }
                 }
             });
@@ -135,60 +281,56 @@ public class FreestarPlugin extends CordovaPlugin {
         } else if (ACTION_LOAD_REWARD_AD.equals(action)) {
 
             synchronized (this) {
-                if (!canRequest()) {
+                if (!canFullscreenRequest()) {
                     Log.e(TAG, "Cannot LOAD_REWARD_AD while another ad is in progress ");
                     return false;
                 }
-                markRequest();
+                markFullscreenRequest();
             }
 
             JSONObject options = inputs.optJSONObject(0);
-            final String placement = valueFromOptions(PLACEMENT, options);
-
+            final String placement = stringFrom(options, PLACEMENT, "");
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    RewardedAd rewardedAd = new RewardedAd(cordova.getActivity(), rewardedAdListener);
-                    rewardedAdMap.put(placement, rewardedAd);
-                    rewardedAd.loadAd(getAdRequest(), placement);
+                    if (IS_DEBUG) {
+                        MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_REWARDED, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                loadRewardedAd(placement);
+                            }
+                        });
+                    } else {
+                        loadRewardedAd(placement);
+                    }
                 }
             });
 
         } else if (ACTION_SHOW_REWARD_AD.equals(action)) {
 
             JSONObject options = inputs.optJSONObject(0);
-            final String placement = valueFromOptions(PLACEMENT, options);
+            final String placement = stringFrom(options, PLACEMENT, "");
 
-            final String SECRET = valueFromOptions("SECRET", options);
-            final String USERID = valueFromOptions("USERID", options);
-            final String REWARDNAME = valueFromOptions("REWARDNAME", options);
-            final String REWARDAMOUNT = valueFromOptions("REWARDAMOUNT", options);
+            final String SECRET = stringFrom(options, "SECRET", "");
+            final String USERID = stringFrom(options, "USERID", "");
+            final String REWARDNAME = stringFrom(options, "REWARDNAME", "");
+            final String REWARDAMOUNT = stringFrom(options, "REWARDAMOUNT", "");
 
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    RewardedAd rewardedAd = rewardedAdMap.get(placement+"");
-                    if (rewardedAd != null && rewardedAd.isReady()) {
+                    RewardedAd rewardedAd = rewardedAdMap.get(placement + "");
+                    if (rewardedAd != null) {
                         try {
                             rewardedAd.showRewardAd(SECRET, USERID, REWARDNAME, REWARDAMOUNT);
                         } catch (Exception e) {
-                            rewardedAdListener.onRewardedVideoFailed("", ErrorCodes.INTERNAL_ERROR);
+                            rewardedAdListener.onRewardedVideoFailed(placement, ErrorCodes.INTERNAL_ERROR);
+                            ChocolateLogger.e(TAG, "rewarded failed. internal error.", e);
                         }
+                    } else {
+                        rewardedAdListener.onRewardedVideoFailed(placement, ErrorCodes.INVALID_REQUEST);
+                        ChocolateLogger.e(TAG, "show rewarded failed.  reward ad is null.");
                     }
                 }
             });
-
-        } else if (ACTION_CHECK_REWARD_AD.equals(action)) {
-
-            JSONObject options = inputs.optJSONObject(0);
-            final String placement = valueFromOptions(PLACEMENT, options);
-            RewardedAd rewardedAd = rewardedAdMap.get(placement+"");
-
-            boolean result = rewardedAd != null && rewardedAd.isReady();
-
-            if (result) {
-                callbackContext.success();
-            } else {
-                callbackContext.error(0);
-            }
 
         } else if (ACTION_SET_USER_PARAMS.equals(action)) {
 
@@ -196,38 +338,21 @@ public class FreestarPlugin extends CordovaPlugin {
             if (options == null) {
                 return false;
             }
-            final String age = valueFromOptions("AGE", options);
-            final String birthDate = valueFromOptions("BIRTHDATE", options);
-            final String gender = valueFromOptions("GENDER", options);
-            final String maritalStatus = valueFromOptions("MARITALSTATUS", options);
+            final String age = stringFrom(options, "AGE", "");
+            final String birthDate = stringFrom(options, "BIRTHDATE", "");
+            final String gender = stringFrom(options, "GENDER", "");
+            final String maritalStatus = stringFrom(options, "MARITALSTATUS", "");
 
-            final String ethnicity = valueFromOptions("ETHNICITY", options);
-            final String dmaCode = valueFromOptions("DMACODE", options);
-            final String postal = valueFromOptions("POSTAL", options);
-            final String curPostal = valueFromOptions("POSTAL", options);
+            final String ethnicity = stringFrom(options, "ETHNICITY", "");
+            final String dmaCode = stringFrom(options, "DMACODE", "");
+            final String postal = stringFrom(options, "POSTAL", "");
+            final String curPostal = stringFrom(options, "POSTAL", "");
 
-            final String latitude = valueFromOptions("LATITUDE", options);
-            final String longitude = valueFromOptions("LONGITUDE", options);
+            final String latitude = stringFrom(options, "LATITUDE", "");
+            final String longitude = stringFrom(options, "LONGITUDE", "");
 
             setAdRequestUserParams(age, birthDate, gender, maritalStatus,
                     ethnicity, dmaCode, postal, curPostal, latitude, longitude);
-
-        } else if (ACTION_SET_APP_PARAMS.equals(action)) {
-
-            JSONObject options = inputs.optJSONObject(0);
-            if (options == null) {
-                return false;
-            }
-
-            final String appName = valueFromOptions("APPNAME", options);
-            final String pubName = valueFromOptions("PUBNAME", options);
-            final String appDomain = valueFromOptions("APPDOMAIN", options);
-            final String pubDomain = valueFromOptions("PUBDOMAIN", options);
-
-            final String storeUrl = valueFromOptions("STOREURL", options);
-            final String iabCategory = valueFromOptions("IABCATEGORY", options);
-
-            setAdRequestAppParams(appName, pubName, appDomain, pubDomain, storeUrl, iabCategory);
 
         } else if (ACTION_SET_TESTMODE_PARAMS.equals(action)) {
 
@@ -237,7 +362,7 @@ public class FreestarPlugin extends CordovaPlugin {
             }
 
             final boolean isEnabled = options.optBoolean("TESTMODE", false);
-            final String hashID = valueFromOptions("HASHID", options);
+            final String hashID = stringFrom(options, "HASHID", "");
 
             setTestModeEnabled(isEnabled, hashID);
         }
@@ -256,20 +381,19 @@ public class FreestarPlugin extends CordovaPlugin {
         });
     }
 
-    private String appendPlacement(String placement) {
-        return appendPlacement(placement, -1);
-    }
-
-    private String appendPlacement(String placement, int errorCode) {
+    private String callbackParamsFrom(String placement, int bannerAdSize, int errorCode) {
         JSONObject args = new JSONObject();
         try {
             if (placement != null) {
-                args.put("placement", placement);
+                args.put(PLACEMENT, placement);
+            }
+            if (bannerAdSize >= 0) {
+                args.put(BANNER_AD_SIZE, bannerAdSize);
             }
             if (errorCode >= 0) {
                 args.put("error", ErrorCodes.getErrorDescription(errorCode));
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             //ignore
         }
         return args.toString();
@@ -279,39 +403,39 @@ public class FreestarPlugin extends CordovaPlugin {
     private InterstitialAdListener interstitialAdListener = new InterstitialAdListener() {
         @Override
         public void onInterstitialLoaded(String placement) {
-            sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialLoaded',"+
-                    appendPlacement(placement) +
+            sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialLoaded'," +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onInterstitialFailed(String placement, int errorCode) {
-            resetRequest();
+            resetFullscreenRequest();
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialFailed'," +
-                    appendPlacement(placement, errorCode) +
+                    callbackParamsFrom(placement, -1, errorCode) +
                     ");");
         }
 
         @Override
         public void onInterstitialShown(String placement) {
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialShown'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onInterstitialDismissed(final String placement) {
-            resetRequest();
-            clear(placement);
+            resetFullscreenRequest();
+            cleanupFullscreenAds(placement);
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialDismissed'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onInterstitialClicked(String placement) {
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onInterstitialClicked'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
     };
@@ -323,47 +447,47 @@ public class FreestarPlugin extends CordovaPlugin {
         @Override
         public void onRewardedVideoLoaded(String placement) {
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoLoaded'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onRewardedVideoFailed(String placement, int errorCode) {
-            resetRequest();
+            resetFullscreenRequest();
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoFailed'," +
-                    appendPlacement(placement, errorCode) +
+                    callbackParamsFrom(placement, -1, errorCode) +
                     ");");
         }
 
         @Override
         public void onRewardedVideoShown(String placement) {
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoShown'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onRewardedVideoShownError(String placement, int errorCode) {
-            resetRequest();
+            resetFullscreenRequest();
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoShownError'," +
-                    appendPlacement(placement, errorCode) +
+                    callbackParamsFrom(placement, -1, errorCode) +
                     ");");
         }
 
         @Override
         public void onRewardedVideoDismissed(final String placement) {
-            resetRequest();
-            clear(placement);
+            resetFullscreenRequest();
+            cleanupFullscreenAds(placement);
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoDismissed'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
 
         @Override
         public void onRewardedVideoCompleted(String placement) {
-            resetRequest();
+            resetFullscreenRequest();
             sendCallbackToCordova("javascript:cordova.fireDocumentEvent('onRewardedVideoCompleted'," +
-                    appendPlacement(placement) +
+                    callbackParamsFrom(placement, -1, -1) +
                     ");");
         }
     };
@@ -374,8 +498,6 @@ public class FreestarPlugin extends CordovaPlugin {
                                         String ethnicity, String dmaCode, String postal, String curPostal,
                                         String latitude, String longitude) {
         Log.i(TAG, "Cordova User Params Set.");
-        getAdRequest();
-
         adRequest.setAge(age);
         adRequest.setBirthday(getDate(birthDate));
 
@@ -408,25 +530,8 @@ public class FreestarPlugin extends CordovaPlugin {
         }
     }
 
-    private void setAdRequestAppParams(String appName, String pubName,
-                                       String appDomain, String pubDomain,
-                                       String storeUrl, String iabCategory) {
-        Log.i(TAG, "Cordova App Params Set.");
-        getAdRequest();
-
-        adRequest.setAppName(appName);
-        adRequest.setRequester(pubName);
-
-        adRequest.setAppDomain(appDomain);
-        adRequest.setPublisherDomain(pubDomain);
-
-        adRequest.setAppStoreUrl(storeUrl);
-        adRequest.setCategory(iabCategory);
-    }
-
     private void setTestModeEnabled(boolean isEnabled, String hashID) {
         Log.i(TAG, "Cordova Test Params Set.");
-        getAdRequest();
 
         FreeStarAds.enableLogging(isEnabled);
         FreeStarAds.enableTestAds(isEnabled);
@@ -436,14 +541,6 @@ public class FreestarPlugin extends CordovaPlugin {
         Set<String> testID = new HashSet<String>();
         testID.add(hashID);
         adRequest.setTestDevices(testID);
-    }
-
-    private AdRequest getAdRequest() {
-        if (adRequest == null) {
-            adRequest = new AdRequest(cordova.getActivity());
-        }
-
-        return adRequest;
     }
 
     private Date getDate(String dateString) {
@@ -456,34 +553,36 @@ public class FreestarPlugin extends CordovaPlugin {
     }
     //////////////////////////////////////////////////////////////////////////////
 
-    void resetRequest() {
-        lastRequestMillis = 0;
+    private void resetFullscreenRequest() {
+        lastFullscreenMillis = 0;
     }
 
-    private void markRequest() {
-        lastRequestMillis = System.currentTimeMillis();
+    private void markFullscreenRequest() {
+        lastFullscreenMillis = System.currentTimeMillis();
     }
 
-    private boolean canRequest() {
-        return System.currentTimeMillis() - lastRequestMillis > 5000L;
+    private boolean canFullscreenRequest() {
+        //don't load any other fullscreen ad within 5 seconds
+        //of another fullscreen ad request
+        return System.currentTimeMillis() - lastFullscreenMillis > 5000L;
     }
 
-    void clear(String placement) {
+    private void cleanupFullscreenAds(String placement) {
         try {
-            InterstitialAd interstitialAd = interstitialAdMap.get(placement+"");
+            InterstitialAd interstitialAd = interstitialAdMap.get(placement + "");
             if (interstitialAd != null) {
                 interstitialAd.destroyView();
-                interstitialAdMap.remove(placement+"");
+                interstitialAdMap.remove(placement + "");
                 Log.i(TAG, "Interstitial ad cleared.");
             }
-            RewardedAd rewardedAd = rewardedAdMap.get(placement+"");
+            RewardedAd rewardedAd = rewardedAdMap.get(placement + "");
             if (rewardedAd != null) {
                 rewardedAd.destroyView();
-                rewardedAdMap.remove(placement+"");
+                rewardedAdMap.remove(placement + "");
                 Log.i(TAG, "Rewarded ad cleared.");
             }
-        }catch (Exception e) {
-            Log.e(TAG, "clear() failed ",e);
+        } catch (Exception e) {
+            Log.e(TAG, "clear() failed ", e);
         }
     }
 }
