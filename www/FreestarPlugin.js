@@ -190,7 +190,7 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
 
    //supported banner ad positions
    FreestarPlugin.prototype.BANNER_AD_POSITION_BOTTOM = 0;
-   FreestarPlugin.prototype.BANNER_AD_POSITION_MIDDLE = 1;
+   FreestarPlugin.prototype.BANNER_AD_POSITION_CENTER = 1;
    FreestarPlugin.prototype.BANNER_AD_POSITION_TOP = 2;
 
    FreestarPlugin.prototype.loadRewardedAd = function(placement) {
