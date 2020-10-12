@@ -1,8 +1,3 @@
-//////////////////////////////COMMON METHODS FOR ALL AD TYPES//////////////////////////////
-//Fullscreen Interstitial
-//Fullscreen Rewarded
-//Banner 320x50 and 300x250
-
 function log(message) {
     if (true) {                 //Make it false to disable log
         console.log("FreestarPlugin.js: " + message)
@@ -60,8 +55,8 @@ function setTestModeEnabled(isEnabled, hashID) {
 
 //////////////////////////////SHOW INTERSTITIAL AD//////////////////////////////
 
-var ACTION_LOAD_INTERSTITIAL_AD = "LOAD_INTERSTITIAL_AD";
-var ACTION_SHOW_INTERSTITIAL_AD = "SHOW_INTERSTITIAL_AD";
+const ACTION_LOAD_INTERSTITIAL_AD = "LOAD_INTERSTITIAL_AD";
+const ACTION_SHOW_INTERSTITIAL_AD = "SHOW_INTERSTITIAL_AD";
 
 function loadInterstitialAdFromSDK(placement) {
     log("loadInterstitialAdFromSDK");
@@ -97,12 +92,12 @@ function showInterstitialAdFromSDK(placement) {
 }
 
 //////////////////////////////SHOW REWARD AD//////////////////////////////
-var ACTION_LOAD_REWARD_AD = "LOAD_REWARD_AD";
-var ACTION_SHOW_REWARD_AD = "SHOW_REWARD_AD";
-var ACTION_CHECK_REWARD_AD = "CHECK_REWARD_AD";
+const ACTION_LOAD_REWARD_AD = "LOAD_REWARD_AD";
+const ACTION_SHOW_REWARD_AD = "SHOW_REWARD_AD";
+const ACTION_CHECK_REWARD_AD = "CHECK_REWARD_AD";
 
-var ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
-var ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
+const ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
+const ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
 
 function loadRewardAdFromSDK(placement) {
     log("loadRewardAdFromSDK");
@@ -185,46 +180,61 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
     );
 }
 
-var FreestarAds = {};
 
-//supported banner ad sizes
-FreestarAds.BANNER_AD_SIZE_320x50 = 0;
-FreestarAds.BANNER_AD_SIZE_300x250 = 1;
+(function (global) {
+   var FreestarPlugin = function () {};
 
-//supported banner ad positions
-FreestarAds.BANNER_AD_POSITION_BOTTOM = 0;
-FreestarAds.BANNER_AD_POSITION_MIDDLE = 1;
-FreestarAds.BANNER_AD_POSITION_TOP = 2;
+   //supported banner ad sizes
+   FreestarPlugin.prototype.BANNER_AD_SIZE_320x50 = 0;
+   FreestarPlugin.prototype.BANNER_AD_SIZE_300x250 = 1;
 
-FreestarAds.loadRewardedAd = function(placement) {
-	console.log("FreestarPlugin.js: load rewarded.  placement: " + placement);
-	loadRewardAdFromSDK(placement);
-}
+   //supported banner ad positions
+   FreestarPlugin.prototype.BANNER_AD_POSITION_BOTTOM = 0;
+   FreestarPlugin.prototype.BANNER_AD_POSITION_MIDDLE = 1;
+   FreestarPlugin.prototype.BANNER_AD_POSITION_TOP = 2;
 
-FreestarAds.loadInterstitialAd = function(placement) {
-   console.log("FreestarPlugin.js: load interstitial.  placement: " + placement);
-	loadInterstitialAdFromSDK(placement);
-}
+   FreestarPlugin.prototype.loadRewardedAd = function(placement) {
+      console.log("FreestarPlugin.js: load rewarded.  placement: " + placement);
+      loadRewardAdFromSDK(placement);
+   }
 
-FreestarAds.showRewardedAd = function(placement) {
-	console.log("FreestarPlugin.js: show rewarded.  placement: " + placement);
-	showRewardAdFromSDK(placement);
-}
+   FreestarPlugin.prototype.loadInterstitialAd = function(placement) {
+      console.log("FreestarPlugin.js: load interstitial.  placement: " + placement);
+      loadInterstitialAdFromSDK(placement);
+   }
 
-FreestarAds.showInterstitialAd = function(placement) {
-   console.log("FreestarPlugin.js: show interstitial.  placement: " + placement);
-	showInterstitialAdFromSDK(placement);
-}
+   FreestarPlugin.prototype.showRewardedAd = function(placement) {
+      console.log("FreestarPlugin.js: show rewarded.  placement: " + placement);
+      showRewardAdFromSDK(placement);
+   }
 
-FreestarAds.showBannerAd = function(placement, bannerAdSize, bannerAdPosition) {
-   console.log("FreestarPlugin.js: show banner ad.  placement: " + placement
-               + " adSize: " + bannerAdSize
-               + " adPosition: " + bannerAdPosition);
-	showBannerAdFromSDK(placement, bannerAdSize, bannerAdPosition);
-}
+   FreestarPlugin.prototype.showInterstitialAd = function(placement) {
+      console.log("FreestarPlugin.js: show interstitial.  placement: " + placement);
+      showInterstitialAdFromSDK(placement);
+   }
 
-FreestarAds.closeBannerAd = function(placement, bannerAdSize) {
-   console.log("FreestarPlugin.js: close banner ad.  placement: " + placement
-               + " adSize: " + bannerAdSize);
-	closeBannerAdFromSDK(placement, bannerAdSize);
-}
+   FreestarPlugin.prototype.showBannerAd = function(placement, bannerAdSize, bannerAdPosition) {
+      console.log("FreestarPlugin.js: show banner ad.  placement: " + placement
+                  + " adSize: " + bannerAdSize
+                  + " adPosition: " + bannerAdPosition);
+      showBannerAdFromSDK(placement, bannerAdSize, bannerAdPosition);
+   }
+
+   FreestarPlugin.prototype.closeBannerAd = function(placement, bannerAdSize) {
+      console.log("FreestarPlugin.js: close banner ad.  placement: " + placement
+                  + " adSize: " + bannerAdSize);
+      closeBannerAdFromSDK(placement, bannerAdSize);
+   }
+
+  global.cordova.addConstructor(function () {
+      if (!global.Cordova) {
+          global.Cordova = global.cordova;
+      }
+
+      if (!global.plugins) {
+          global.plugins = {};
+      }
+
+      global.plugins.freestarPlugin = new FreestarPlugin();
+  });
+} (window));

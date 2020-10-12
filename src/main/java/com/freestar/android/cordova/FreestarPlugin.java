@@ -18,7 +18,6 @@ import com.freestar.android.ads.ErrorCodes;
 import com.freestar.android.ads.FreeStarAds;
 import com.freestar.android.ads.InterstitialAd;
 import com.freestar.android.ads.InterstitialAdListener;
-import com.freestar.android.ads.LVDOConstants;
 import com.freestar.android.ads.RewardedAd;
 import com.freestar.android.ads.RewardedAdListener;
 
@@ -68,6 +67,7 @@ public class FreestarPlugin extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
+        adRequest = new AdRequest(cordova.getActivity());        
         if (IS_DEBUG) {
             FreeStarAds.enableTestAds(true);
             FreeStarAds.enableLogging(true);
@@ -103,14 +103,14 @@ public class FreestarPlugin extends CordovaPlugin {
     private void loadInterstitialAd(String placement) {
         InterstitialAd interstitialAd = new InterstitialAd(cordova.getActivity(), interstitialAdListener);
         interstitialAdMap.put(placement, interstitialAd);
-        interstitialAd.loadAd(getAdRequest(), placement);
+        interstitialAd.loadAd(adRequest, placement);
         interstitialAd.loadAd(adRequest);
     }
 
     private void loadRewardedAd(String placement) {
         RewardedAd rewardedAd = new RewardedAd(cordova.getActivity(), rewardedAdListener);
         rewardedAdMap.put(placement, rewardedAd);
-        rewardedAd.loadAd(getAdRequest(), placement);
+        rewardedAd.loadAd(adRequest, placement);
     }
 
     private void loadBannerAd(final String placement, final int bannerAdSize, final int bannerAdPosition) {
@@ -122,7 +122,7 @@ public class FreestarPlugin extends CordovaPlugin {
             popupBannerAd = new PopupBannerAd(cordova.getActivity());
             final PopupBannerAd finalPopupBannerAd = popupBannerAd;
             popupBannerAdMap.put(placement + "" + bannerAdSize, popupBannerAd);
-            popupBannerAd.loadBannerAd(getAdRequest(),
+            popupBannerAd.loadBannerAd(adRequest,
                     from(bannerAdSize),
                     placement,
                     bannerAdPosition,
@@ -498,8 +498,6 @@ public class FreestarPlugin extends CordovaPlugin {
                                         String ethnicity, String dmaCode, String postal, String curPostal,
                                         String latitude, String longitude) {
         Log.i(TAG, "Cordova User Params Set.");
-        getAdRequest();
-
         adRequest.setAge(age);
         adRequest.setBirthday(getDate(birthDate));
 
@@ -534,7 +532,6 @@ public class FreestarPlugin extends CordovaPlugin {
 
     private void setTestModeEnabled(boolean isEnabled, String hashID) {
         Log.i(TAG, "Cordova Test Params Set.");
-        getAdRequest();
 
         FreeStarAds.enableLogging(isEnabled);
         FreeStarAds.enableTestAds(isEnabled);
@@ -544,13 +541,6 @@ public class FreestarPlugin extends CordovaPlugin {
         Set<String> testID = new HashSet<String>();
         testID.add(hashID);
         adRequest.setTestDevices(testID);
-    }
-
-    private AdRequest getAdRequest() {
-        if (adRequest == null) {
-            adRequest = new AdRequest(cordova.getActivity());
-        }
-        return adRequest;
     }
 
     private Date getDate(String dateString) {
