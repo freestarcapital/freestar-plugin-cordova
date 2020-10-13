@@ -203,9 +203,9 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
       loadInterstitialAdFromSDK(placement);
    }
 
-   FreestarPlugin.prototype.showRewardedAd = function(placement) {
+   FreestarPlugin.prototype.showRewardedAd = function(placement, SECRET, USERID, REWARDNAME, REWARDAMOUNT) {
       console.log("FreestarPlugin.js: show rewarded.  placement: " + placement);
-      showRewardAdFromSDK(placement);
+      showRewardAdFromSDK(placement, SECRET, USERID, REWARDNAME, REWARDAMOUNT);
    }
 
    FreestarPlugin.prototype.showInterstitialAd = function(placement) {
