@@ -190,7 +190,7 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
 
    //supported banner ad positions
    FreestarPlugin.prototype.BANNER_AD_POSITION_BOTTOM = 0;
-   FreestarPlugin.prototype.BANNER_AD_POSITION_MIDDLE = 1;
+   FreestarPlugin.prototype.BANNER_AD_POSITION_CENTER = 1;
    FreestarPlugin.prototype.BANNER_AD_POSITION_TOP = 2;
 
    FreestarPlugin.prototype.loadRewardedAd = function(placement) {
@@ -203,9 +203,9 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
       loadInterstitialAdFromSDK(placement);
    }
 
-   FreestarPlugin.prototype.showRewardedAd = function(placement) {
+   FreestarPlugin.prototype.showRewardedAd = function(placement, SECRET, USERID, REWARDNAME, REWARDAMOUNT) {
       console.log("FreestarPlugin.js: show rewarded.  placement: " + placement);
-      showRewardAdFromSDK(placement);
+      showRewardAdFromSDK(placement, SECRET, USERID, REWARDNAME, REWARDAMOUNT);
    }
 
    FreestarPlugin.prototype.showInterstitialAd = function(placement) {
