@@ -5,7 +5,8 @@
   "cordova": {
     "id": "cordova-plugin-freestar",
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   },
   "repository": {
@@ -17,7 +18,8 @@
     "mediation",
     "ads",
     "ecosystem:cordova",
-    "cordova-android"
+    "cordova-android",
+    "cordova-ios"
   ],
   "author": "freestar",
   "license": "Apache 2.0",
