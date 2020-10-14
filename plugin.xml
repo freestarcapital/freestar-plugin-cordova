@@ -16,4 +16,34 @@
         </config-file>
     </platform>
     <framework src="android_dependencies.gradle" custom="true" type="gradleReference" />
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+  			<feature name="FreestarPlugin">
+  				<param name="ios-package" value="FreestarPlugin" />
+  			</feature>
+		</config-file>
+
+        <header-file src="ios/FreestarPlugin.h"/>
+        <source-file src="ios/FreestarPlugin.m"/>
+
+        <podspec>
+            <config>
+                <source url="https://cdn.cocoapods.org/"/>
+            </config>
+            <pods use-frameworks="true">
+                <pod name="FreestarAds" spec="~> 3.3" />
+                <pod name="FreestarAds-AdColony" spec="~> 3.0" />
+                <pod name="FreestarAds-AppLovin" spec="~> 3.0" />
+                <pod name="FreestarAds-Googleadmob" spec="~> 2.0" />
+                <pod name="FreestarAds-Tapjoy" spec="~> 3.0" />
+                <pod name="FreestarAds-Unity" spec="~> 4.0" />
+                <pod name="FreestarAds-Vungle" spec="~> 3.0" />
+                <pod name="FreestarAds-Amazon" spec="~> 2.0" />
+                <pod name="FreestarAds-GAM" spec="~> 1.0" />
+                <pod name="FreestarAds-Facebook" spec="~> 3.1" />
+                <pod name="FreestarAds-Criteo" spec="~> 1.0" />
+            </pods>
+        </podspec>
+    </platform>
 </plugin>
