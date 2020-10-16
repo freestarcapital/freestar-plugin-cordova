@@ -1,6 +1,6 @@
 {
   "name": "@freestar/cordova-plugin-freestar",
-  "version": "1.0.22",
+  "version": "1.0.23-0",
   "description": "Freestar Ads Mediation Plugin for Cordova",
   "cordova": {
     "id": "cordova-plugin-freestar",
@@ -37,5 +37,7 @@
     "merge-stream": "^2.0.0",
     "np": "^6.5.0"
   },
-  "files": [ "dist/*"]
+  "files": [
+    "dist/*"
+  ]
 }
