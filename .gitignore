@@ -13,4 +13,3 @@
 .sonar
 sonar-project.properties
 /node_modules
-dist

@@ -10,7 +10,6 @@
     ]
   },
   "scripts": {
-    "publish-npm": "gulp && np",
     "test": "echo \"No test specified\""
   },
   "repository": {
@@ -32,12 +31,6 @@
   },
   "homepage": "https://github.com/freestarcapital/freestar-plugin-cordova#readme",
   "devDependencies": {
-    "gulp": "^4.0.2",
-    "gulp-clean": "^0.4.0",
-    "merge-stream": "^2.0.0",
     "np": "^6.5.0"
-  },
-  "files": [
-    "dist"
-  ]
+  }
 }
