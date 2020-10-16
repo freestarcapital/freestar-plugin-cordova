@@ -9,6 +9,9 @@
       "ios"
     ]
   },
+  "scripts": {
+    "test": "echo \"No test specified\""
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/freestarcapital/freestar-plugin-cordova.git"
@@ -26,5 +29,8 @@
   "bugs": {
     "url": "https://github.com/freestarcapital/freestar-plugin-cordova/issues"
   },
-  "homepage": "https://github.com/freestarcapital/freestar-plugin-cordova#readme"
+  "homepage": "https://github.com/freestarcapital/freestar-plugin-cordova#readme",
+  "devDependencies": {
+    "np": "^6.5.0"
+  }
 }

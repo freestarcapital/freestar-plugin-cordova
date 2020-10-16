@@ -12,3 +12,4 @@
 /captures
 .sonar
 sonar-project.properties
+/node_modules
