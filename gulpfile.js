@@ -4,7 +4,7 @@ const gulp = require('gulp'),
     merge = require('merge-stream'),
     clean = require('gulp-clean')
 
-const DIST_DIR = "dist";
+const DIST_DIR = "./dist";
 const FOLDERS = ["ios", "www"]
 const FILES = [
     "android_dependencies.gradle",
@@ -24,10 +24,10 @@ function build() {
         return gulp.src(element + "/**/*")
             .pipe(gulp.dest(DIST_DIR+ '/' + element +"/"))
     });
-    const files_task = FOLDERS.map(function(element){
-
-        return gulp.src(element )
-            .pipe(gulp.dest(DIST_DIR+ '/' + element +"/"))
+    const files_task = FILES.map(function(element){
+        console.log(element)
+        return gulp.src(element)
+            .pipe(gulp.dest(DIST_DIR))
     });
     return merge(folders_tasks,files_task)
 }
