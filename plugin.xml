@@ -2,7 +2,7 @@
 <plugin id="cordova-plugin-freestar" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>FreestarPlugin</name>
     <description>Freestar Ads Mediation Plugin for Cordova</description>
-    <license>Apache 2.0</license>
+    <license>Apache-2.0</license>
     <keywords>freestar, mediation, ads</keywords>
     <js-module name="freestarplugin" src="www/FreestarPlugin.js">
         <clobbers target="window.plugins.freestarPlugin" />
