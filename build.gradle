@@ -20,14 +20,14 @@ apply plugin: 'com.android.library'
  */
 ext {
     bintrayRepo = 'fsdk' // repo name
-    bintrayName = 'cordova-plugin-beta' // CHANGE PER SDK TYPE
+    bintrayName = 'cordova-plugin' // CHANGE PER SDK TYPE
     publishedGroupId = 'com.freestar.android.cordova' // maven group id
     libraryName = "$bintrayRepo"  // same as repo name
     artifact = "$bintrayName" // maven artifact name; same as bintrayName
     libraryDescription = 'Freestar Mediation Platform - Cordova plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/freestar-plugin-cordova.git'
-    libraryVersion = '1.1.1'  //CHANGE
+    libraryVersion = '1.1.2'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'Freestar developer'
     developerEmail = 'support@freestar.io'
@@ -90,7 +90,7 @@ repositories {
 
 dependencies {
 
-    compileOnly 'com.freestar.android.ads:freestar-beta:3.2.9-beta02'
+    compileOnly 'com.freestar.android.ads:freestar:3.2.9'
 
     compileOnly 'org.apache.cordova:framework:7.0.0'
 }

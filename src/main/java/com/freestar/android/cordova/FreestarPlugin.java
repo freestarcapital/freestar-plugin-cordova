@@ -41,8 +41,7 @@ import java.util.Set;
 public class FreestarPlugin extends CordovaPlugin {
 
     private static final String TAG = "FreestarCordovaPlugin";
-
-    private static final boolean IS_DEBUG = true; //TODO remove
+    private boolean isChooserEnabled;
 
     private static final String API_META_KEY = "com.freestar.android.ads.API_KEY";
     private static final String PLACEMENT = "placement";
@@ -58,6 +57,7 @@ public class FreestarPlugin extends CordovaPlugin {
     private static final String ACTION_CLOSE_BANNER_AD = "CLOSE_BANNER_AD";
     private static final String ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
     private static final String ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
+    private static final String ACTION_SET_ENABLE_PARTNER_CHOOSER = "SET_ENABLE_PARTNER_CHOOSER";
 
     private AdRequest adRequest;
     private Map<String, InterstitialAd> interstitialAdMap = new HashMap<>();
@@ -68,10 +68,6 @@ public class FreestarPlugin extends CordovaPlugin {
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
         adRequest = new AdRequest(cordova.getActivity());        
-        if (IS_DEBUG) {
-            FreeStarAds.enableTestAds(true);
-            FreeStarAds.enableLogging(true);
-        }
         ChocolateLogger.i(TAG, "Init FreestarPlugin");
         try {
             Context context = webView.getContext();
@@ -205,7 +201,7 @@ public class FreestarPlugin extends CordovaPlugin {
             final int bannerAdPosition = intFrom(options, BANNER_AD_POSITION, FreestarConstants.BANNER_AD_POSITION_BOTTOM);
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    if (IS_DEBUG) {
+                    if (isChooserEnabled) {
                         MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_BANNER, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -245,7 +241,7 @@ public class FreestarPlugin extends CordovaPlugin {
                 final String placement = stringFrom(options, PLACEMENT, "");
 
                 public void run() {
-                    if (IS_DEBUG) {
+                    if (isChooserEnabled) {
                         MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_INTERSTITIAL, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -292,7 +288,7 @@ public class FreestarPlugin extends CordovaPlugin {
             final String placement = stringFrom(options, PLACEMENT, "");
             cordova.getActivity().runOnUiThread(new Runnable() {
                 public void run() {
-                    if (IS_DEBUG) {
+                    if (isChooserEnabled) {
                         MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_REWARDED, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -365,6 +361,14 @@ public class FreestarPlugin extends CordovaPlugin {
             final String hashID = stringFrom(options, "HASHID", "");
 
             setTestModeEnabled(isEnabled, hashID);
+        } else if (ACTION_SET_ENABLE_PARTNER_CHOOSER.equals(action)) {
+
+            JSONObject options = inputs.optJSONObject(0);
+            if (options == null) {
+                return false;
+            }
+
+            isChooserEnabled = options.optBoolean("ENABLED", false);
         }
 
         return true;
