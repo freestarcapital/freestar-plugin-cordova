@@ -11,7 +11,7 @@ allprojects {
 }
 dependencies {
     //begin Freestar
-    implementation 'com.freestar.android.ads:freestar-beta:3.2.9-beta02'
+    implementation 'com.freestar.android.ads:freestar:3.2.9'
     implementation 'com.freestar.android.ads.admob:freestar-admob-adapter:17.2.0.4'
     implementation 'com.freestar.android.ads.applovin:freestar-applovin-adapter:9.13.1.2'
     implementation 'com.freestar.android.ads.amazon:freestar-amazon-adapter:5.9.0.3'
@@ -44,7 +44,7 @@ dependencies {
         exclude group: 'com.android.support'
     }
 
-    implementation 'com.freestar.android.cordova:cordova-plugin-beta:1.+'
+    implementation 'com.freestar.android.cordova:cordova-plugin:1.+'
     //Note: if you are using Pre-roll, un-comment the following line:
     //implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.11.2'
     //end, FreeStar

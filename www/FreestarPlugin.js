@@ -34,6 +34,26 @@ function setAdRequestUserParams(age, birthDate, gender, maritalStatus,
 
 
 //////////////////////////////FREESTAR ADS TEST MODE//////////////////////////////
+function setPartnerChooserEnabled(isEnabled) {
+    log("setPartnerChooserEnabled");
+
+    cordova.exec(
+        function(result) {
+            log("Success");
+        },
+        function(result) {
+            log("Fail")
+        },
+        "FreestarPlugin",
+        ACTION_SET_ENABLE_PARTNER_CHOOSER,
+        [{
+         	"ENABLED":isEnabled
+         }]
+    );
+}
+
+
+//////////////////////////////FREESTAR ADS TEST MODE//////////////////////////////
 function setTestModeEnabled(isEnabled, hashID) {
     log("setTestModeEnabled");
 
@@ -98,6 +118,7 @@ const ACTION_CHECK_REWARD_AD = "CHECK_REWARD_AD";
 
 const ACTION_SET_USER_PARAMS = "SET_USER_PARAMS";
 const ACTION_SET_TESTMODE_PARAMS = "SET_TESTMODE_PARAMS";
+const ACTION_SET_ENABLE_PARTNER_CHOOSER = "SET_ENABLE_PARTNER_CHOOSER";
 
 function loadRewardAdFromSDK(placement) {
     log("loadRewardAdFromSDK");
@@ -224,6 +245,40 @@ function closeBannerAdFromSDK(placement, bannerAdSize) {
       console.log("FreestarPlugin.js: close banner ad.  placement: " + placement
                   + " adSize: " + bannerAdSize);
       closeBannerAdFromSDK(placement, bannerAdSize);
+   }
+
+   FreestarPlugin.prototype.setTestModeEnabled = function(isEnabled, hashID) {
+      console.log("FreestarPlugin.js: setTestModeEnabled.  isEnabled: " + isEnabled
+                  + " hashID: " + hashID);
+      setTestModeEnabled(isEnabled, hashID);
+   }
+
+   FreestarPlugin.prototype.setPartnerChooserEnabled = function(isEnabled) {
+      console.log("FreestarPlugin.js: setPartnerChooserEnabled.  isEnabled: " + isEnabled);
+      setPartnerChooserEnabled(isEnabled);
+   }
+
+   FreestarPlugin.prototype.setAdRequestUserParams = function( age,
+                                                               birthDate,
+                                                               gender,
+                                                               maritalStatus,
+                                                               ethnicity,
+                                                               dmaCode,
+                                                               postal,
+                                                               curPostal,
+                                                               latitude,
+                                                               longitude) {
+      console.log("FreestarPlugin.js: setAdRequestUserParams. age: " + age
+                                                               + " birthDate: " + birthDate
+                                                               + " gender: " + gender
+                                                               + " maritalStatus: " + maritalStatus
+                                                               + " dmaCode: " + dmaCode
+                                                               + " postal: " + postal
+                                                               + " curPostal: " + curPostal
+                                                               + " latitude: " + latitude
+                                                               + " longitude: " + longitude);
+      setAdRequestUserParams(age, birthDate, gender, maritalStatus,
+                                      ethnicity, dmaCode, postal, curPostal, latitude, longitude);
    }
 
   global.cordova.addConstructor(function () {
