@@ -8,7 +8,7 @@ allprojects {
         maven { url 'https://sdk.tapjoy.com/' }
         maven { url 'https://artifact.bytedance.com/repository/pangle' }
         maven { url "https://hyprmx.jfrog.io/artifactory/hyprmx" }
-        maven { uri 'https://adsbynimbus-public.s3.amazonaws.com/android/sdks' }
+        maven { url 'https://adsbynimbus-public.s3.amazonaws.com/android/sdks' }
     }
 }
 dependencies {
