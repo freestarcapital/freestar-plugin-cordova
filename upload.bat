@@ -1,1 +1,0 @@
-call gradlew clean build install bintrayUpload

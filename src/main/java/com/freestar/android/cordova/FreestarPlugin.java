@@ -160,8 +160,10 @@ public class FreestarPlugin extends CordovaPlugin {
     private AdSize from(int bannerAdSize) {
         if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_320x50) {
             return AdSize.BANNER_320_50;
-        } else {
+        } else if (bannerAdSize == FreestarConstants.BANNER_AD_SIZE_300x250) {
             return AdSize.MEDIUM_RECTANGLE_300_250;
+        } else {
+            return AdSize.LEADERBOARD_728_90;
         }
     }
 
