@@ -15,10 +15,10 @@ import java.util.List;
  */
 class MediationPartners {
 
-    private static int numInterstitial = 11;
-    private static int numRewarded = 11;
-    private static int numInview = 8;
-    private static int numPreroll = 3;
+    private static final int numInterstitial = 14;
+    private static final int numRewarded = 13;
+    private static final int numBanner = 13;
+    private static final int numPreroll = 2;
 
     public static final int ADTYPE_INTERSTITIAL = 0;
     public static final int ADTYPE_REWARDED = 1;
@@ -28,10 +28,10 @@ class MediationPartners {
     /**
      * INTERSTITIAL
      */
-    private static String[] interstitial_partners = new String[numInterstitial];
+    private static final String[] interstitial_partners = new String[numInterstitial];
 
     static {
-        interstitial_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
+        interstitial_partners[0] = LVDOConstants.PARTNER.TAM.name();
         interstitial_partners[1] = LVDOConstants.PARTNER.ADCOLONY.name();
         interstitial_partners[2] = LVDOConstants.PARTNER.APPLOVIN.name();
         interstitial_partners[3] = LVDOConstants.PARTNER.CRITEO.name();
@@ -39,12 +39,15 @@ class MediationPartners {
         interstitial_partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
         interstitial_partners[6] = LVDOConstants.PARTNER.GOOGLE.name();
         interstitial_partners[7] = LVDOConstants.PARTNER.MOPUB.name();
-        interstitial_partners[8] = LVDOConstants.PARTNER.TAPJOY.name();
-        interstitial_partners[9] = LVDOConstants.PARTNER.UNITY.name();
-        interstitial_partners[10] = LVDOConstants.PARTNER.VUNGLE.name();
+        interstitial_partners[8] = LVDOConstants.PARTNER.NIMBUS.name();
+        interstitial_partners[9] = LVDOConstants.PARTNER.TAPJOY.name();
+        interstitial_partners[10] = LVDOConstants.PARTNER.UNITY.name();
+        interstitial_partners[11] = LVDOConstants.PARTNER.VUNGLE.name();
+        interstitial_partners[12] = LVDOConstants.PARTNER.PANGLE.name();
+        interstitial_partners[13] = LVDOConstants.PARTNER.HYPRMX.name();
     }
 
-    private static boolean[] interstitial_parters_selected = new boolean[numInterstitial];
+    private static final boolean[] interstitial_parters_selected = new boolean[numInterstitial];
 
     static {
         for (int i = 0; i < numInterstitial; i++) {
@@ -67,23 +70,25 @@ class MediationPartners {
     /**
      * REWARDED
      */
-    private static String[] rewarded_partners = new String[numRewarded];
+    private static final String[] rewarded_partners = new String[numRewarded];
 
     static {
-        rewarded_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
-        rewarded_partners[1] = LVDOConstants.PARTNER.ADCOLONY.name();
-        rewarded_partners[2] = LVDOConstants.PARTNER.APPLOVIN.name();
-        rewarded_partners[3] = LVDOConstants.PARTNER.CRITEO.name();
-        rewarded_partners[4] = LVDOConstants.PARTNER.FACEBOOK.name();
-        rewarded_partners[5] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
-        rewarded_partners[6] = LVDOConstants.PARTNER.GOOGLE.name();
-        rewarded_partners[7] = LVDOConstants.PARTNER.MOPUB.name();
+        rewarded_partners[0] = LVDOConstants.PARTNER.ADCOLONY.name();
+        rewarded_partners[1] = LVDOConstants.PARTNER.APPLOVIN.name();
+        rewarded_partners[2] = LVDOConstants.PARTNER.CRITEO.name();
+        rewarded_partners[3] = LVDOConstants.PARTNER.FACEBOOK.name();
+        rewarded_partners[4] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        rewarded_partners[5] = LVDOConstants.PARTNER.GOOGLE.name();
+        rewarded_partners[6] = LVDOConstants.PARTNER.MOPUB.name();
+        rewarded_partners[7] = LVDOConstants.PARTNER.NIMBUS.name();
         rewarded_partners[8] = LVDOConstants.PARTNER.TAPJOY.name();
         rewarded_partners[9] = LVDOConstants.PARTNER.UNITY.name();
         rewarded_partners[10] = LVDOConstants.PARTNER.VUNGLE.name();
+        rewarded_partners[11] = LVDOConstants.PARTNER.PANGLE.name();
+        rewarded_partners[12] = LVDOConstants.PARTNER.HYPRMX.name();
     }
 
-    private static boolean[] rewarded_parters_selected = new boolean[numRewarded];
+    private static final boolean[] rewarded_parters_selected = new boolean[numRewarded];
 
     static {
         for (int i = 0; i < numRewarded; i++) {
@@ -103,34 +108,39 @@ class MediationPartners {
     }
 
     /**
-     * NATIVE INVIEW
+     * BANNER
      */
-    private static String[] inview_partners = new String[numInview];
+    private static final String[] banner_partners = new String[numBanner];
 
     static {
-        inview_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
-        inview_partners[1] = LVDOConstants.PARTNER.APPLOVIN.name();
-        inview_partners[2] = LVDOConstants.PARTNER.CRITEO.name();
-        inview_partners[3] = LVDOConstants.PARTNER.FACEBOOK.name();
-        inview_partners[4] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
-        inview_partners[5] = LVDOConstants.PARTNER.GOOGLE.name();
-        inview_partners[6] = LVDOConstants.PARTNER.MOPUB.name();
-        inview_partners[7] = LVDOConstants.PARTNER.UNITY.name();
+        banner_partners[0] = LVDOConstants.PARTNER.TAM.name();
+        banner_partners[1] = LVDOConstants.PARTNER.APPLOVIN.name();
+        banner_partners[2] = LVDOConstants.PARTNER.CRITEO.name();
+        banner_partners[3] = LVDOConstants.PARTNER.FACEBOOK.name();
+        banner_partners[4] = LVDOConstants.PARTNER.GOOGLEADMOB.name();
+        banner_partners[5] = LVDOConstants.PARTNER.GOOGLE.name();
+        banner_partners[6] = LVDOConstants.PARTNER.MOPUB.name();
+        banner_partners[7] = LVDOConstants.PARTNER.NIMBUS.name();
+        banner_partners[8] = LVDOConstants.PARTNER.UNITY.name();
+        banner_partners[9] = LVDOConstants.PARTNER.PANGLE.name();
+        banner_partners[10] = LVDOConstants.PARTNER.VUNGLE.name();
+        banner_partners[11] = LVDOConstants.PARTNER.HYPRMX.name();
+        banner_partners[12] = LVDOConstants.PARTNER.ADCOLONY.name();
     }
 
-    private static boolean[] inview_parters_selected = new boolean[numInview];
+    private static final boolean[] banner_parters_selected = new boolean[numBanner];
 
     static {
-        for (int i = 0; i < numInview; i++) {
-            inview_parters_selected[i] = true;
+        for (int i = 0; i < numBanner; i++) {
+            banner_parters_selected[i] = true;
         }
     }
 
-    private static List<LVDOConstants.PARTNER> setInviewPartners(AdRequest adRequest) {
-        List<LVDOConstants.PARTNER> list = new ArrayList<>(numInview);
-        for (int i = 0; i < numInview; i++) {
-            if (inview_parters_selected[i]) {
-                list.add(LVDOConstants.PARTNER.valueOf(inview_partners[i]));
+    private static List<LVDOConstants.PARTNER> setBannerPartners(AdRequest adRequest) {
+        List<LVDOConstants.PARTNER> list = new ArrayList<>(numBanner);
+        for (int i = 0; i < numBanner; i++) {
+            if (banner_parters_selected[i]) {
+                list.add(LVDOConstants.PARTNER.valueOf(banner_partners[i]));
             }
         }
         adRequest.setPartnerNames(list);
@@ -140,15 +150,14 @@ class MediationPartners {
     /**
      * PRE-ROLL
      */
-    private static String[] preroll_partners = new String[numPreroll];
+    private static final String[] preroll_partners = new String[numPreroll];
 
     static {
-        preroll_partners[0] = LVDOConstants.PARTNER.AMAZON.name();
-        preroll_partners[1] = LVDOConstants.PARTNER.CRITEO.name();
-        preroll_partners[2] = LVDOConstants.PARTNER.GOOGLE.name();
+        preroll_partners[0] = LVDOConstants.PARTNER.GOOGLE.name();
+        preroll_partners[1] = LVDOConstants.PARTNER.NIMBUS.name();
     }
 
-    private static boolean[] preroll_parters_selected = new boolean[numPreroll];
+    private static final boolean[] preroll_parters_selected = new boolean[numPreroll];
 
     static {
         for (int i = 0; i < numPreroll; i++) {
@@ -185,8 +194,8 @@ class MediationPartners {
             selected = rewarded_parters_selected;
             title = "Rewarded";
         } else if (adUnitType == ADTYPE_BANNER) {
-            partners = inview_partners;
-            selected = inview_parters_selected;
+            partners = banner_partners;
+            selected = banner_parters_selected;
             title = "Display";
         } else {
             partners = preroll_partners;
@@ -209,7 +218,7 @@ class MediationPartners {
                                 setInterstitialPartners(adRequest);
                                 break;
                             case ADTYPE_BANNER:
-                                setInviewPartners(adRequest);
+                                setBannerPartners(adRequest);
                                 break;
                             case ADTYPE_PREROLL:
                                 setPrerollPartners(adRequest);
@@ -229,7 +238,7 @@ class MediationPartners {
 
     }
 
-    private static DialogInterface.OnClickListener dummyOnClick = new DialogInterface.OnClickListener() {
+    private static final DialogInterface.OnClickListener dummyOnClick = new DialogInterface.OnClickListener() {
         @Override
         public void onClick(DialogInterface dialog, int which) {
 
@@ -237,7 +246,7 @@ class MediationPartners {
     };
 
     /**
-     * @param adUnitType 0:interstitial, 1:rewarded, 2:inview, 3:preroll
+     * @param adUnitType 0:interstitial, 1:rewarded, 2:banner, 3:preroll
      */
     static String[] getChosenPartners(int adUnitType) {
         String[] partners;
@@ -255,10 +264,10 @@ class MediationPartners {
             total = numRewarded;
             chosen = new String[numRewarded];
         } else if (adUnitType == ADTYPE_BANNER) {
-            partners = inview_partners;
-            selected = inview_parters_selected;
-            total = numInview;
-            chosen = new String[numInview];
+            partners = banner_partners;
+            selected = banner_parters_selected;
+            total = numBanner;
+            chosen = new String[numBanner];
         } else {
             partners = preroll_partners;
             selected = preroll_parters_selected;

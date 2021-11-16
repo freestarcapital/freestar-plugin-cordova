@@ -10,7 +10,7 @@ apply plugin: 'com.android.library'
  *   libraryDescription
  *
  *   Then run:
- *   gradlew clean build install bintrayUpload
+ *   gradlew clean build artifactoryPublish
  *
  * NOTE: before uploading to bintray, make sure the library has been tested
  * and verified.  If there is a problem, then you will have to increment the
@@ -27,7 +27,7 @@ ext {
     libraryDescription = 'Freestar Mediation Platform - Cordova plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/freestar-plugin-cordova.git'
-    libraryVersion = '1.1.2'  //CHANGE
+    libraryVersion = '1.1.3'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'Freestar developer'
     developerEmail = 'support@freestar.io'
@@ -38,22 +38,21 @@ ext {
 
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 30
     buildToolsVersion '28.0.3'
 
     defaultConfig {
         minSdkVersion 19
-        targetSdkVersion 29
-        versionCode 3
+        targetSdkVersion 30
+        versionCode 4
         versionName "$libraryVersion"
         archivesBaseName = "$artifact"
     }
 
     buildTypes {
         release {
-            minifyEnabled true
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro', 'vdopiaproguard.txt'
-            consumerProguardFiles 'vdopiaproguard.txt'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -74,26 +73,28 @@ buildscript {
         classpath 'com.android.tools.build:gradle:4.0.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:1.5'
+        classpath 'org.jfrog.buildinfo:build-info-extractor-gradle:4.21.0'
     }
 }
 
+
 repositories {
-    jcenter()
+    mavenCentral()
     google()
 
     flatDir {
         dirs 'libs'
     }
-    maven { url 'https://dl.bintray.com/cordova/maven' }
-    maven { url "https://dl.bintray.com/vdopiacorp/fsdk" }
+    maven { url "https://freestar.jfrog.io/artifactory/freestar-mediation-android-sdk" }
 }
 
 dependencies {
 
-    compileOnly 'com.freestar.android.ads:freestar:3.2.9'
+    compileOnly 'com.freestar.android.ads:freestar:4.6.0'
 
     compileOnly 'org.apache.cordova:framework:7.0.0'
 }
 
-apply from: 'installv.gradle'
-apply from: 'bintrayv.gradle'
+//apply from: 'installv.gradle'
+//apply from: 'bintrayv.gradle'
+apply from: 'artifact.gradle'

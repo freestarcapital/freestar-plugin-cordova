@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="cordova-plugin-freestar" version="1.0.0" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-freestar" version="1.1.8" xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>FreestarPlugin</name>
     <description>Freestar Ads Mediation Plugin for Cordova</description>
     <license>Apache-2.0</license>
@@ -32,17 +32,17 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="FreestarAds" spec="~> 3.3" />
-                <pod name="FreestarAds-AdColony" spec="~> 3.0" />
-                <pod name="FreestarAds-AppLovin" spec="~> 3.0" />
-                <pod name="FreestarAds-Googleadmob" spec="~> 2.0" />
-                <pod name="FreestarAds-Tapjoy" spec="~> 3.0" />
-                <pod name="FreestarAds-Unity" spec="~> 4.0" />
-                <pod name="FreestarAds-Vungle" spec="~> 3.0" />
-                <pod name="FreestarAds-Amazon" spec="~> 2.0" />
-                <pod name="FreestarAds-GAM" spec="~> 1.0" />
-                <pod name="FreestarAds-Facebook" spec="~> 3.1" />
-                <pod name="FreestarAds-Criteo" spec="~> 1.0" />
+              <pod name="FreestarAds" spec="~> 5.3" />
+              <pod name="FreestarAds-AdColony" spec="~> 5.1" />
+              <pod name="FreestarAds-AppLovin" spec="~> 5.1" />
+              <pod name="FreestarAds-Googleadmob" spec="~> 6.1" />
+              <pod name="FreestarAds-Tapjoy" spec="~> 5.0" />
+              <pod name="FreestarAds-Unity" spec="~> 6.0" />
+              <pod name="FreestarAds-Vungle" spec="~> 5.2" />
+              <pod name="FreestarAds-GAM" spec="~> 5.1" />              
+              <pod name="FreestarAds-TAM" spec="~> 2.2" />
+              <pod name="FreestarAds-Pangle" spec="~> 1.1" />
+              <pod name="FreestarAds-Hyprmx" spec="~> 1.0" />
             </pods>
         </podspec>
     </platform>
