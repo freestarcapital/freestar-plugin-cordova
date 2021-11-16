@@ -57,13 +57,13 @@
 
 - (void)pluginInitialize {
     NSString *apiKey = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"com.freestar.ios.ads.API_KEY"];
-    
+
     self.interstitials = [[NSMutableDictionary alloc] init];
     self.rewarded = [[NSMutableDictionary alloc] init];
     self.banners = [[NSMutableDictionary alloc] init];
-    
-    
-    [Freestar initWithAdUnitID:apiKey];
+
+
+    [Freestar initWithAppKey:apiKey];
 }
 
 -(void)SET_TESTMODE_PARAMS:(CDVInvokedUrlCommand*)command {}
@@ -76,15 +76,15 @@
 
 - (void) setDemographics:(CDVInvokedUrlCommand *)command {
     NSDictionary* dict = [command.arguments objectAtIndex:0];
-    
+
     NSString* age = [dict valueForKey:KEY_AGE];
     NSString* birthDate = [dict valueForKey:KEY_BIRTHDATE];
     NSString* gender = [dict valueForKey:KEY_GENDER];
     NSString* maritalStatus = [dict valueForKey:KEY_MARITALSTATUS];
     NSString* ethicity = [dict valueForKey:KEY_ETHNICITY];
-    
+
     FreestarDemographics *dem = [Freestar demographics];
-    
+
     if ([self isStringValid:age]){
         dem.age = [age integerValue];
     }
@@ -99,7 +99,7 @@
             }
         }
     }
-    
+
     if ([self isStringValid:maritalStatus]){
         if([maritalStatus rangeOfString:@"single" options:NSCaseInsensitiveSearch].location != NSNotFound){
             dem.maritalStatus = FreestarMaritalStatusSingle;
@@ -117,10 +117,10 @@
     }
     if ([self isStringValid:gender]){
         NSString *genderString = gender;
-        
+
         NSRange maleRange = [genderString rangeOfString:@"Male" options:NSCaseInsensitiveSearch];
         NSRange feMaleRange = [genderString rangeOfString:@"Female" options:NSCaseInsensitiveSearch];
-        
+
         if (maleRange.location != NSNotFound){
             dem.gender = FreestarGenderMale;
         }else if (feMaleRange.location != NSNotFound){
@@ -136,15 +136,15 @@
 
 - (void) setLocation:(CDVInvokedUrlCommand *)command {
     NSDictionary* dict = [command.arguments objectAtIndex:0];
-    
+
     NSString* dmacode = [dict valueForKey:KEY_DMACODE];
     NSString* postalCode = [dict valueForKey:KEY_POSTAL];
     NSString* curPostalCode = [dict valueForKey:KEY_CURPOSTAL];
     NSString* latitude = [dict valueForKey:KEY_LATITUDE];
     NSString* lagitude = [dict valueForKey:KEY_LONGITUDE];
-    
+
     FreestarLocation *loc = [Freestar location];
-    
+
     if ([self isStringValid:dmacode]){
         loc.dmacode = dmacode;
     }
@@ -157,15 +157,15 @@
     if ([self isStringValid:latitude] && [self isStringValid:lagitude])
     {
         CLLocation *location = [[CLLocation alloc] initWithLatitude:[latitude doubleValue] longitude:[lagitude doubleValue]];
-        
+
         loc.location = location;
     }
 }
 
 - (void) LOAD_INTERSTITIAL_AD:(CDVInvokedUrlCommand *)command {
-    
+
     self.callbackId = command.callbackId;
-    
+
     // Retrieve the JavaScript-created date String from the CDVInvokedUrlCommand instance.
     // When we implement the JavaScript caller to this function, we'll see how we'll
     // pass an array (command.arguments), which will contain a single String.
@@ -176,13 +176,13 @@
 }
 
 - (void) SHOW_INTERSTITIAL_AD:(CDVInvokedUrlCommand *)command {
-    
+
     self.callbackId = command.callbackId;
-    
+
     NSString * placement  = [command extractPlacement];
-    
+
     FreestarInterstitialAd *ad = self.interstitials[placement];
-    
+
     [ad showFrom:[self visibleViewController:[UIApplication sharedApplication].keyWindow.rootViewController]];
 }
 
@@ -227,9 +227,9 @@
 
 
 - (void)LOAD_REWARD_AD:(CDVInvokedUrlCommand *)command {
-    
+
     self.callbackId = command.callbackId;
-    
+
     NSString * placement  = [command extractPlacement];
     FreestarRewardedAd *ad = [[FreestarRewardedAd alloc] initWithDelegate:self andReward:[FreestarReward blankReward]];
     self.rewarded[placement] = ad;
@@ -238,9 +238,9 @@
 
 - (void)SHOW_REWARD_AD:(CDVInvokedUrlCommand *)command {
     NSString * placement  = [command extractPlacement];
-    
+
     FreestarRewardedAd *ad = self.rewarded[placement];
-    
+
     FreestarReward *rew = [FreestarReward blankReward];
     rew.secretKey = [[command.arguments objectAtIndex:0] valueForKey:@"SECRET"];
     rew.userID = [[command.arguments objectAtIndex:0] valueForKey:@"USERID"];
@@ -248,9 +248,9 @@
     rew.rewardAmount = [[[command.arguments objectAtIndex:0] valueForKey:@"REWARDAMOUNT"] integerValue];
     ad.reward = rew;
 
-    
+
     [ad showFrom:[self visibleViewController:[UIApplication sharedApplication].keyWindow.rootViewController]];
-    
+
 }
 
 #pragma Mark - Rewarded Callbacks
@@ -300,19 +300,19 @@
     {
         UINavigationController *navigationController = (UINavigationController *)rootViewController.presentedViewController;
         UIViewController *lastViewController = [[navigationController viewControllers] lastObject];
-        
+
         return [self visibleViewController:lastViewController];
     }
     if ([rootViewController.presentedViewController isKindOfClass:[UITabBarController class]])
     {
         UITabBarController *tabBarController = (UITabBarController *)rootViewController.presentedViewController;
         UIViewController *selectedViewController = tabBarController.selectedViewController;
-        
+
         return [self visibleViewController:selectedViewController];
     }
-    
+
     UIViewController *presentedViewController = (UIViewController *)rootViewController.presentedViewController;
-    
+
     return [self visibleViewController:presentedViewController];
 }
 
@@ -321,23 +321,23 @@
 
 - (void) SHOW_BANNER_AD:(CDVInvokedUrlCommand *)command {
     NSString * placement  = [command extractPlacement];
-    
+
     NSInteger adSize = [[[command.arguments objectAtIndex:0] valueForKey:@"banner_ad_size"] integerValue];
     NSInteger adPosition = [[[command.arguments objectAtIndex:0] valueForKey:@"banner_ad_position"] integerValue];
 
-    
+
     FreestarBannerAdSize size = adSize == 0 ? FreestarBanner320x50 : FreestarBanner300x250;
-    
+
     FreestarBannerAd *ad = [[FreestarBannerAd alloc] initWithDelegate:self andSize:size];
     ad.tag = adPosition;
-    
+
     self.banners[placement] = ad;
     [ad loadPlacement:placement];
 }
 
 - (void) CLOSE_BANNER_AD:(CDVInvokedUrlCommand *)command {
     NSString * placement  = [command extractPlacement];
-    
+
     FreestarBannerAd *ad = self.banners[placement];
     [ad removeFromSuperview];
     self.banners[placement] = nil;
@@ -351,7 +351,7 @@
             break;
         }
     }
-    
+
     CGFloat vPos;
     if (ad.tag == 0) { //bottom
         vPos = kw.bounds.size.height - ad.bounds.size.height/2;
@@ -360,14 +360,14 @@
     } else { //top
         vPos = ad.bounds.size.height/2;
     }
-    
+
     ad.center = CGPointMake(CGRectGetMidX(kw.bounds), vPos);
     [kw addSubview:ad];
-    
+
     [self.commandDelegate runInBackground:^{
         [self.commandDelegate evalJs:[self jsEventString:@"onBannerAdShown" params:@{@"placement": [ad valueForKeyPath:@"ad.placement"]}]];
     }];
-    
+
 }
 
 -(void)freestarBannerFailed:(FreestarBannerAd *)ad because:(FreestarNoAdReason)reason {
@@ -412,5 +412,3 @@
 }
 
 @end
-
-
