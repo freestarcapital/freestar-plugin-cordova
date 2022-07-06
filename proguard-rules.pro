@@ -132,3 +132,7 @@
 #hyprmx
 -keep class com.hyprmx.** { *; }
 -keep interface com.hyprmx.** { *; }
+
+# Yahoo/Verizon
+-keep class com.verizon.** { *; }
+-keep interface com.verizon.** { *; }
