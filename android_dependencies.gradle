@@ -12,6 +12,11 @@ allprojects {
         maven { url 'https://artifactory.verizonmedia.com/artifactory/maven/' }
     }
 }
+android {
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
+    }
+}
 dependencies {
 
     implementation 'androidx.appcompat:appcompat:1.2.0'
