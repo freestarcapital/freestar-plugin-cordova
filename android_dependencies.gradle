@@ -96,7 +96,5 @@ dependencies {
     implementation 'com.google.ads.mediation:facebook:6.8.0.0'
 
     implementation 'com.freestar.android.cordova:cordova-plugin:1.1.5'
-    //Note: if you are using Pre-roll, un-comment the following line:
-    //implementation 'com.google.ads.interactivemedia.v3:interactivemedia:3.11.2'
     //end, FreeStar
 }
