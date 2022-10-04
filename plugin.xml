@@ -32,18 +32,23 @@
                 <source url="https://cdn.cocoapods.org/"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="FreestarAds" spec="~> 5.12" />
+                <pod name="FreestarAds" spec="~> 5.17" />
                 <pod name="FreestarAds-AdColony" spec="~> 4.7" />
+                <pod name="FreestarAds-AppLovin" spec="~> 11.0" />
+                <pod name="FreestarAds-AppLovinMax" spec="~> 11.0" />
+                <pod name="FreestarAds-GAM" spec="~> 9.2" />
+                <pod name="FreestarAds-GAM/Facebook" spec="~> 9.2" />
                 <pod name="FreestarAds-Googleadmob" spec="~> 9.2" />
                 <pod name="FreestarAds-Googleadmob/Facebook" spec="~> 9.2" />
+                <pod name="FreestarAds-Hyprmx" spec="~> 6.0" />
+                <pod name="FreestarAds-Nimbus" spec="~> 1.10" />
+                <pod name="FreestarAds-Ogury" spec="~> 2.1" />
+                <pod name="FreestarAds-Pangle" spec="~> 3.7" />
+                <pod name="FreestarAds-Prebid" spec="~> 2.0" />
+                <pod name="FreestarAds-TAM" spec="~> 4.4" />
                 <pod name="FreestarAds-Tapjoy" spec="~> 12.8" />
                 <pod name="FreestarAds-Unity" spec="~> 4.1" />
                 <pod name="FreestarAds-Vungle" spec="~> 6.10" />
-                <pod name="FreestarAds-GAM" spec="~> 9.2" />
-                <pod name="FreestarAds-GAM/Facebook" spec="~> 9.2" />
-                <pod name="FreestarAds-TAM" spec="~> 4.4" />
-                <pod name="FreestarAds-Pangle" spec="~> 3.7" />
-                <pod name="FreestarAds-Hyprmx" spec="~> 6.0" />
                 <pod name="FreestarAds-Yahoo" spec="~> 1.14" />
             </pods>
         </podspec>
