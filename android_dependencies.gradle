@@ -10,6 +10,12 @@ allprojects {
         maven { url 'https://hyprmx.jfrog.io/artifactory/hyprmx' }
         maven { url 'https://adsbynimbus-public.s3.amazonaws.com/android/sdks' }
         maven { url 'https://artifactory.verizonmedia.com/artifactory/maven/' }
+        maven { url "https://maven.ogury.co" }
+    }
+}
+android {
+    packagingOptions {
+        exclude 'META-INF/*.kotlin_module'
     }
 }
 dependencies {
