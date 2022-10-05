@@ -125,14 +125,26 @@
     !static <methods>;
 }
 
+# adsbynimbus
+-keep class com.adsbynimbus.** { *; }
+-keep interface com.adsbynimbus.** { *; }
+
 # pangle
 -keep class com.bytedance.sdk.** { *; }
 -keep class com.pgl.sys.ces.* {*;}
 
-#hyprmx
+# hyprmx
 -keep class com.hyprmx.** { *; }
 -keep interface com.hyprmx.** { *; }
 
-# Yahoo/Verizon
+# verizon
 -keep class com.verizon.** { *; }
 -keep interface com.verizon.** { *; }
+
+# prebid
+-keep class org.prebid.** { *; }
+-keep interface org.prebid.** { *; }
+
+# ogury
+-keep class com.ogury.** {*;}
+-keep interface com.ogury.** {*;}

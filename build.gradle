@@ -27,7 +27,7 @@ ext {
     libraryDescription = 'Freestar Mediation Platform - Cordova plugin'   //CHANGE PER SDK TYPE
     siteUrl = 'https://freestar.io'
     gitUrl = 'https://github.com/freestarcapital/freestar-plugin-cordova.git'
-    libraryVersion = '1.1.5'  //CHANGE
+    libraryVersion = '1.1.7'  //CHANGE
     developerId = 'vdopiacorp'
     developerName = 'Freestar developer'
     developerEmail = 'support@freestar.io'
@@ -38,12 +38,12 @@ ext {
 
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 33
 
     defaultConfig {
-        minSdkVersion 19
-        targetSdkVersion 31
-        versionCode 4
+        minSdkVersion 21
+        targetSdkVersion 33
+        versionCode 5
         versionName "$libraryVersion"
         archivesBaseName = "$artifact"
     }
@@ -102,7 +102,7 @@ repositories {
 
 dependencies {
 
-    compileOnly 'com.freestar.android.ads:freestar:4.6.5'
+    compileOnly 'com.freestar.android.ads:freestar:5.0.0'
 
     compileOnly 'org.apache.cordova:framework:7.0.0'
 }

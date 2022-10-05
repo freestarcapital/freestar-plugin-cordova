@@ -29,6 +29,8 @@ public class MediationPartners {
 
     static {
         sInterstitialPartners.add(LVDOConstants.PARTNER.ADCOLONY.name());
+        sInterstitialPartners.add(LVDOConstants.PARTNER.APPLOVIN.name());
+        sInterstitialPartners.add(LVDOConstants.PARTNER.APPLOVINMAX.name());
         sInterstitialPartners.add(LVDOConstants.PARTNER.CRITEO.name());
         sInterstitialPartners.add(LVDOConstants.PARTNER.GOOGLEADMOB.name());
         sInterstitialPartners.add(LVDOConstants.PARTNER.GOOGLE.name());
@@ -41,6 +43,7 @@ public class MediationPartners {
         sInterstitialPartners.add(LVDOConstants.PARTNER.VUNGLE.name());
         sInterstitialPartners.add(LVDOConstants.PARTNER.YAHOO.name());
         sInterstitialPartners.add(LVDOConstants.PARTNER.PREBID.name());
+        sInterstitialPartners.add(LVDOConstants.PARTNER.OGURY.name());
         Collections.sort(sInterstitialPartners);
         sSelectedInterstitialPartners = new boolean[sInterstitialPartners.size()];
         for (int i = 0; i < sInterstitialPartners.size(); i++) {
@@ -68,6 +71,8 @@ public class MediationPartners {
 
     static {
         sRewardedPartners.add(LVDOConstants.PARTNER.ADCOLONY.name());
+        sRewardedPartners.add(LVDOConstants.PARTNER.APPLOVIN.name());
+        sRewardedPartners.add(LVDOConstants.PARTNER.APPLOVINMAX.name());
         sRewardedPartners.add(LVDOConstants.PARTNER.CRITEO.name());
         sRewardedPartners.add(LVDOConstants.PARTNER.GOOGLEADMOB.name());
         sRewardedPartners.add(LVDOConstants.PARTNER.GOOGLE.name());
@@ -78,6 +83,7 @@ public class MediationPartners {
         sRewardedPartners.add(LVDOConstants.PARTNER.PANGLE.name());
         sRewardedPartners.add(LVDOConstants.PARTNER.HYPRMX.name());
         sRewardedPartners.add(LVDOConstants.PARTNER.PREBID.name());
+        sRewardedPartners.add(LVDOConstants.PARTNER.OGURY.name());
         Collections.sort(sRewardedPartners);
         sSelectedRewardedPartners = new boolean[sRewardedPartners.size()];
         for (int i = 0; i < sRewardedPartners.size(); i++) {
@@ -105,6 +111,8 @@ public class MediationPartners {
     static {
         sBannerPartners.add(LVDOConstants.PARTNER.TAM.name());
         sBannerPartners.add(LVDOConstants.PARTNER.ADCOLONY.name());
+        sBannerPartners.add(LVDOConstants.PARTNER.APPLOVIN.name());
+        sBannerPartners.add(LVDOConstants.PARTNER.APPLOVINMAX.name());
         sBannerPartners.add(LVDOConstants.PARTNER.CRITEO.name());
         sBannerPartners.add(LVDOConstants.PARTNER.GOOGLEADMOB.name());
         sBannerPartners.add(LVDOConstants.PARTNER.GOOGLE.name());
@@ -115,6 +123,7 @@ public class MediationPartners {
         sBannerPartners.add(LVDOConstants.PARTNER.HYPRMX.name());
         sBannerPartners.add(LVDOConstants.PARTNER.YAHOO.name());
         sBannerPartners.add(LVDOConstants.PARTNER.PREBID.name());
+        sBannerPartners.add(LVDOConstants.PARTNER.OGURY.name());
         Collections.sort(sBannerPartners);
         sSelectedBannerPartners = new boolean[sBannerPartners.size()];
         for (int i = 0; i < sBannerPartners.size(); i++) {
@@ -193,11 +202,11 @@ public class MediationPartners {
         //w/out the listener, even though it does nothing, things don't work so well
         //so we need to pass a listener
         new AlertDialog.Builder(context).setMultiChoiceItems(partners, selected, new DialogInterface.OnMultiChoiceClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which, boolean isChecked) {
 
-            }
-        })
+                    }
+                })
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
