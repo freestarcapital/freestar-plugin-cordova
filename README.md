@@ -8,9 +8,9 @@ Android:  https://github.com/freestarcapital/SDK_documentation_Android/wiki/Free
 
 
 ###### Developer Notes
-Make changes.  Do NOT manually update package version within package.json.  This will
-happen automatically (via np), but do change all other necessary items.  Commit all
-other items.
+When publishing (np) do not manually version bump the plugin in package.json.  package.json
+will be automatically bumped via np.
+However, do manually version bump the plugin version in plugin.xml
 
 Plugin publish process:
 ```
