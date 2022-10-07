@@ -1,7 +1,6 @@
 package com.freestar.android.cordova;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
@@ -68,13 +67,12 @@ public class FreestarPlugin extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        adRequest = new AdRequest(cordova.getContext());
+        adRequest = new AdRequest(cordova.getActivity());
         ChocolateLogger.i(TAG, "Init FreestarPlugin");
         try {
-            Context context = webView.getContext();
-            ApplicationInfo app = context.getPackageManager().getApplicationInfo(webView.getContext().getPackageName(), PackageManager.GET_META_DATA);
+            ApplicationInfo app = cordova.getActivity().getPackageManager().getApplicationInfo(cordova.getActivity().getPackageName(), PackageManager.GET_META_DATA);
             String apiKey = app.metaData.getString(API_META_KEY);
-            FreeStarAds.init(context, apiKey);
+            FreeStarAds.init(cordova.getActivity(), apiKey);
         } catch (Exception e) {
             //this will be bad since Freestar won't be able to initialize
             ChocolateLogger.e(TAG, "init failed", e);
