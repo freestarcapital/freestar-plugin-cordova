@@ -18,6 +18,7 @@ import com.freestar.android.ads.ErrorCodes;
 import com.freestar.android.ads.FreeStarAds;
 import com.freestar.android.ads.InterstitialAd;
 import com.freestar.android.ads.InterstitialAdListener;
+import com.freestar.android.ads.LVDOAdUtil;
 import com.freestar.android.ads.RewardedAd;
 import com.freestar.android.ads.RewardedAdListener;
 
@@ -67,7 +68,7 @@ public class FreestarPlugin extends CordovaPlugin {
 
     public void initialize(CordovaInterface cordova, CordovaWebView webView) {
         super.initialize(cordova, webView);
-        adRequest = new AdRequest(cordova.getActivity());        
+        adRequest = new AdRequest(cordova.getContext());
         ChocolateLogger.i(TAG, "Init FreestarPlugin");
         try {
             Context context = webView.getContext();
@@ -170,7 +171,7 @@ public class FreestarPlugin extends CordovaPlugin {
     @Override
     public void onResume(boolean multitasking) {
         super.onResume(multitasking);
-        cordova.getActivity().runOnUiThread(new Runnable() {
+        LVDOAdUtil.runOnUiThread(new Runnable() {
             public void run() {
                 for (PopupBannerAd popupBannerAd : popupBannerAdMap.values()) {
                     popupBannerAd.onResume();
@@ -182,7 +183,7 @@ public class FreestarPlugin extends CordovaPlugin {
     @Override
     public void onPause(boolean multitasking) {
         super.onPause(multitasking);
-        cordova.getActivity().runOnUiThread(new Runnable() {
+        LVDOAdUtil.runOnUiThread(new Runnable() {
             public void run() {
                 for (PopupBannerAd popupBannerAd : popupBannerAdMap.values()) {
                     popupBannerAd.onPause();
@@ -201,7 +202,7 @@ public class FreestarPlugin extends CordovaPlugin {
             final String placement = stringFrom(options, PLACEMENT, "");
             final int bannerAdSize = intFrom(options, BANNER_AD_SIZE, FreestarConstants.BANNER_AD_SIZE_320x50);
             final int bannerAdPosition = intFrom(options, BANNER_AD_POSITION, FreestarConstants.BANNER_AD_POSITION_BOTTOM);
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 public void run() {
                     if (isChooserEnabled) {
                         MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_BANNER, new DialogInterface.OnClickListener() {
@@ -220,7 +221,7 @@ public class FreestarPlugin extends CordovaPlugin {
             JSONObject options = inputs.optJSONObject(0);
             final String placement = stringFrom(options, PLACEMENT, "");
             final int bannerAdSize = intFrom(options, BANNER_AD_SIZE, FreestarConstants.BANNER_AD_SIZE_320x50);
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 public void run() {
                     PopupBannerAd popupBannerAd = popupBannerAdMap.get(placement + "" + bannerAdSize);
                     if (popupBannerAd != null && popupBannerAd.isShowing()) {
@@ -238,7 +239,7 @@ public class FreestarPlugin extends CordovaPlugin {
                 markFullscreenRequest();
             }
 
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 JSONObject options = inputs.optJSONObject(0);
                 final String placement = stringFrom(options, PLACEMENT, "");
 
@@ -259,7 +260,7 @@ public class FreestarPlugin extends CordovaPlugin {
         } else if (ACTION_SHOW_INTERSTITIAL_AD.equals(action)) {
             JSONObject options = inputs.optJSONObject(0);
             final String placement = stringFrom(options, PLACEMENT, "");
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 public void run() {
                     InterstitialAd interstitialAd = interstitialAdMap.get(placement + "");
                     if (interstitialAd != null) {
@@ -288,7 +289,7 @@ public class FreestarPlugin extends CordovaPlugin {
 
             JSONObject options = inputs.optJSONObject(0);
             final String placement = stringFrom(options, PLACEMENT, "");
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 public void run() {
                     if (isChooserEnabled) {
                         MediationPartners.choosePartners(cordova.getActivity(), adRequest, MediationPartners.ADTYPE_REWARDED, new DialogInterface.OnClickListener() {
@@ -313,7 +314,7 @@ public class FreestarPlugin extends CordovaPlugin {
             final String REWARDNAME = stringFrom(options, "REWARDNAME", "");
             final String REWARDAMOUNT = stringFrom(options, "REWARDAMOUNT", "");
 
-            cordova.getActivity().runOnUiThread(new Runnable() {
+            LVDOAdUtil.runOnUiThread(new Runnable() {
                 public void run() {
                     RewardedAd rewardedAd = rewardedAdMap.get(placement + "");
                     if (rewardedAd != null) {
@@ -379,7 +380,7 @@ public class FreestarPlugin extends CordovaPlugin {
     private void sendCallbackToCordova(final String jsString) {
         ChocolateLogger.i(TAG, "Cordova Callback : " + jsString);
 
-        cordova.getActivity().runOnUiThread(new Runnable() {
+        LVDOAdUtil.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 webView.loadUrl(jsString);
