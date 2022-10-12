@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="cordova-plugin-freestar" version="1.3.5" xmlns="http://apache.org/cordova/ns/plugins/1.0">
+<plugin id="cordova-plugin-freestar" version="1.3.6"
+    xmlns="http://apache.org/cordova/ns/plugins/1.0">
     <name>FreestarPlugin</name>
     <description>Freestar Ads Mediation Plugin for Cordova</description>
     <license>Apache-2.0</license>
@@ -15,21 +16,21 @@
             </feature>
         </config-file>
     </platform>
-    <framework src="android_dependencies.gradle" custom="true" type="gradleReference" />
+    <framework custom="true" src="android_dependencies.gradle" type="gradleReference" />
 
     <platform name="ios">
-        <config-file target="config.xml" parent="/*">
-  			<feature name="FreestarPlugin">
-  				<param name="ios-package" value="FreestarPlugin" />
-  			</feature>
-		</config-file>
+        <config-file parent="/*" target="config.xml">
+            <feature name="FreestarPlugin">
+                <param name="ios-package" value="FreestarPlugin" />
+            </feature>
+        </config-file>
 
-        <header-file src="ios/FreestarPlugin.h"/>
-        <source-file src="ios/FreestarPlugin.m"/>
+        <header-file src="ios/FreestarPlugin.h" />
+        <source-file src="ios/FreestarPlugin.m" />
 
         <podspec>
             <config>
-                <source url="https://cdn.cocoapods.org/"/>
+                <source url="https://cdn.cocoapods.org/" />
             </config>
             <pods use-frameworks="true">
                 <pod name="FreestarAds" spec="~> 5.17" />
@@ -41,7 +42,6 @@
                 <pod name="FreestarAds-GAM/Facebook" spec="~> 9.2" />
                 <pod name="FreestarAds-Googleadmob" spec="~> 9.2" />
                 <pod name="FreestarAds-Googleadmob/Facebook" spec="~> 9.2" />
-                <pod name="FreestarAds-Google" spec="~> 3.13" />
                 <pod name="FreestarAds-Hyprmx" spec="~> 6.0" />
                 <pod name="FreestarAds-Nimbus" spec="~> 1.10" />
                 <pod name="FreestarAds-Ogury" spec="~> 2.1" />
