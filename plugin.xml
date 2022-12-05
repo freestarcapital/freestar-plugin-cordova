@@ -38,10 +38,11 @@
                 <pod name="FreestarAds-AppLovin" spec="~> 11.0" />
                 <pod name="FreestarAds-AppLovinMax" spec="~> 11.0" />
                 <pod name="FreestarAds-Criteo" spec="~> 4.3" />
-                <pod name="FreestarAds-GAM" spec="~> 9.2" />
-                <pod name="FreestarAds-GAM/Facebook" spec="~> 9.2" />
-                <pod name="FreestarAds-Googleadmob" spec="~> 9.2" />
-                <pod name="FreestarAds-Googleadmob/Facebook" spec="~> 9.2" />
+                <pod name="FreestarAds-Fyber2" spec="~> 8.1" />                
+                <pod name="FreestarAds-GAM" spec="~> 9.11" />
+                <pod name="FreestarAds-GAM/Facebook" spec="~> 9.11" />
+                <pod name="FreestarAds-Googleadmob" spec="~> 9.11" />
+                <pod name="FreestarAds-Googleadmob/Facebook" spec="~> 9.11" />
                 <pod name="FreestarAds-Hyprmx" spec="~> 6.0" />
                 <pod name="FreestarAds-Nimbus" spec="~> 1.10" />
                 <pod name="FreestarAds-Ogury" spec="~> 2.1" />
