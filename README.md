@@ -8,11 +8,6 @@ Android:  https://github.com/freestarcapital/SDK_documentation_Android/wiki/Free
 
 
 ###### Developer Notes
-When publishing (np) do not manually version bump the plugin in package.json.  package.json
-will be automatically bumped via np.
-However, do manually version bump the plugin version in plugin.xml
+When publishing manually bump up the plugin version in package.json AND plugin.xml
 
-Plugin publish process:
-```
-np
-```
+npm publish
